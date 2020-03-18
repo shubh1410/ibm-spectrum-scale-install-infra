@@ -1,12 +1,13 @@
 ---
 - name: Collect status of ces shared root
   shell:
-   cmd: mmlsconfig | grep 'cesSharedRoot'
+   cmd: mmlsconfig | grep 'cesSharedRoot '
   register: ces_status
+  ignore_errors: true
 
 - name: Configuring cesSharedRoot
   shell:
-   cmd: mmchconfig cesSharedRoot= "{{ protocols.mountpoint }}"
+   cmd: mmchconfig cesSharedRoot={{ protocols.mountpoint }}
   when: ces_status.rc > 0
 
 - name: Setting server licenses on protocol nodes

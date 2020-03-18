@@ -1,0 +1,143 @@
+{
+  "node_details": [
+    {
+      "fqdn" : slitherfang-vm5.tuc.stglabs.ibm.com,
+      "os" : rhel8,
+      "arch" : x86_64,
+      "ip_address" : 9.11.84.162,
+      "is_admin_node" : True,
+      "is_object_store" : False,
+      "is_nfs" : True,
+      "is_smb" : True,
+      "is_hdfs" : False,
+      "is_protocol_node" : True,
+      "is_nsd_server" : False,
+      "is_quorum_node" : True,
+      "is_manager_node" : True,
+      "is_gui_server" : False,
+      "is_ems_node": False,
+      "is_callhome_node" : True,
+      "is_broker_node" : False,
+      "is_node_offline" : False,
+      "is_node_reachable" : True,
+      "is_node_excluded" : False,
+      "is_mestor_node" : False
+    }, 
+    {
+      "fqdn" : slitherfang-vm6.tuc.stglabs.ibm.com,
+      "os" : rhel8,
+      "arch" : x86_64,
+      "ip_address" : 9.11.84.163,
+      "is_admin_node" : False,
+      "is_object_store" : False,
+      "is_nfs" : False,
+      "is_smb" : False,
+      "is_hdfs" : False,
+      "is_protocol_node" : False,
+      "is_nsd_server" : False,
+      "is_quorum_node" : True,
+      "is_manager_node" : True,
+      "is_gui_server" : False,
+      "is_ems_node": False,
+      "is_callhome_node" : True,
+      "is_broker_node" : False,
+      "is_node_offline" : False,
+      "is_node_reachable" : True,
+      "is_node_excluded" : False,
+      "is_mestor_node" : False
+ 
+    }, 
+    {
+      "fqdn" : slitherfang-vm7.tuc.stglabs.ibm.com,
+      "os" : rhel8,
+      "arch" : x86_64,
+      "ip_address" : 9.11.84.164,
+      "is_admin_node" : False,
+      "is_object_store" : False,
+      "is_nfs" : True,
+      "is_smb" : True,
+      "is_hdfs" : False,
+      "is_protocol_node" : True,
+      "is_nsd_server" : True,
+      "is_quorum_node" : True,
+      "is_manager_node" : True,
+      "is_gui_server" : False,
+      "is_ems_node": False,
+      "is_callhome_node" : True,
+      "is_broker_node" : False,
+      "is_node_offline" : False,
+      "is_node_reachable" : True,
+      "is_node_excluded" : False,
+      "is_mestor_node" : False
+
+    },
+    {
+      "fqdn" : slitherfang-vm8.tuc.stglabs.ibm.com,
+      "os" : rhel8,
+      "arch" : x86_64,
+      "ip_address" : 9.11.84.165,
+      "is_admin_node" : False,
+      "is_object_store" : False,
+      "is_nfs" : True,
+      "is_smb" : True,
+      "is_hdfs" : False,
+      "is_protocol_node" : True,
+      "is_nsd_server" : True,
+      "is_quorum_node" : True,
+      "is_manager_node" : True,
+      "is_gui_server" : False,
+      "is_ems_node": False,
+      "is_callhome_node" : True,
+      "is_broker_node" : False,
+      "is_node_offline" : False,
+      "is_node_reachable" : True,
+      "is_node_excluded" : False,
+      "is_mestor_node" : False
+
+    }
+  ],
+  "scale_storage":[
+    {
+      "filesystem": "cesSharedRoot",
+      "blockSize": 4M,
+      "defaultMetadataReplicas": 1,
+      "defaultDataReplicas": 1,
+      "automaticMountOption": true,
+      "defaultMountPoint": /ibm/cesSharedRoot,
+      "disks": [
+       {
+        "device": "/dev/sdc",
+        "nsd": "nsd1",
+        "servers": "slitherfang-vm8",
+        "usage": dataAndMetadata,
+        "pool": system
+       }
+      ]
+    }
+  ],
+  "callhome":{
+      "is_enabled": true,
+      "is_enabled": true,
+      "customer_name": abc,
+      "customer_email": abc@gmail.com,
+      "customer_id": 12345,
+      "customer_country": IN,
+      "proxy_ip":,
+      "proxy_port":,
+      "proxy_user":,
+      "proxy_password":,
+      "proxy_location":,
+      "callhome_server": slitherfang-vm5,
+      "callhome_group1": [slitherfang-vm5,slitherfang-vm6,slitherfang-vm7],
+      "callhome_schedule": [daily,weekly]
+  },
+  "protocols":{
+      "object": False,
+      "smb": True,
+      "nfs": True,
+      "hdfs": False,
+      "export_ip_pool": [9.11.84.136,9.11.84.135,9.11.84.134,9.11.84.131],
+      "filesystem": cesSharedRoot,
+      "mountpoint": /ibm/cesSharedRoot
+  }
+}

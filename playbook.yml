@@ -1,17 +1,33 @@
 ---
-- hosts: cluster01
+- import_playbook: "set_json_variables.yml"
+
+- hosts: scale_node
   vars:
-    - scale_version: 5.0.4.0
-    - scale_install_localpkg_path: /root/Spectrum_Scale_Standard-5.0.4.0-x86_64-Linux-install
+  - scale_version: 5.0.5.0
+  - scale_install_localpkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
+    #- scale_install_remotepkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
+    #- scale_install_nfs_repository_url: http://9.11.84.162/ganesha_rpms/
   roles:
-     - core/precheck
-     - core/node
-     - core/cluster
-     - gui/precheck
-     - gui/node
-     - gui/cluster
-     - gui/postcheck
-     - zimon/precheck
-     - zimon/node
-     - zimon/cluster
-     - zimon/postcheck
+          #- core/precheck
+          #- core/node
+          #- core/cluster
+          #- core/postcheck
+          #- callhome/precheck
+    #- callhome/node
+    #- callhome/cluster
+    #- callhome/postcheck
+   - ntp/precheck
+   - ntp/node
+   - ntp/cluster
+   - ntp/postcheck
+          # - nfs/common
+    #- nfs/precheck
+    #- nfs/node
+    #- nfs/cluster
+    #- nfs/postcheck
+    #- smb/precheck
+    #- smb/install
+    #- smb/configure
+    #- smb/postcheck
+
+

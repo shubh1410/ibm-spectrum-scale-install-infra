@@ -1,0 +1,12 @@
+- block:
+  - name: callhome | Create extra facts
+    set_fact:
+     callhome_params: "{{ callhome | default([]) | combine(item)}}"
+    when: 
+    - callhome is defined
+    with_items:
+    - "{{ callhome }}"
+      # - debug:
+      # msg: "{{ callhome_params }}"
+
+

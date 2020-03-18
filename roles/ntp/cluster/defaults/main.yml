@@ -1,0 +1,5 @@
+---
+# defaults file for cluster
+#ntp_server: [9.11.107.11,9.11.84.162]
+#ntp_server: []
+
