@@ -128,7 +128,7 @@
       "proxy_password":,
       "proxy_location":,
       "callhome_server": slitherfang-vm5,
-      "callhome_group1": [slitherfang-vm5,slitherfang-vm6,slitherfang-vm7],
+      "callhome_group1": [slitherfang-vm5,slitherfang-vm6,slitherfang-vm7,slitherfang-vm8],
       "callhome_schedule": [daily,weekly]
   },
   "protocols":{
