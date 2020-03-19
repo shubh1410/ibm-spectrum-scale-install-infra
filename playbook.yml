@@ -12,19 +12,19 @@
           #- core/node
           #- core/cluster
           #- core/postcheck
-  - callhome/precheck
-  - callhome/node
-  - callhome/cluster
-  - callhome/postcheck
+          #- callhome/precheck
+          #- callhome/node
+          #- callhome/cluster
+          #- callhome/postcheck
     #- ntp/precheck
     #- ntp/node
     #- ntp/cluster
     #- ntp/postcheck
-    #- nfs/common
-    #- nfs/precheck
-    #- nfs/node
-    #- nfs/cluster
-    #- nfs/postcheck
+  - nfs/common
+  - nfs/precheck
+  - nfs/node
+  - nfs/cluster
+  - nfs/postcheck
     #- smb/precheck
     #- smb/install
     #- smb/configure
