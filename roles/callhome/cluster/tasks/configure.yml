@@ -5,11 +5,11 @@
    chdir: "{{ directory }}"
   register: scale_callhome_config_status
   ignore_errors: true
+  failed_when: false
 
 - debug:
         msg: "{{ scale_callhome_config_status.cmd }}"
  
-
 - block:
 
   - name: configure | Setup the call home proxy configuration if enabled
@@ -21,7 +21,8 @@
 
   - debug:
      msg: "{{ callhome_proxy_status.cmd }}"
- 
+    when: scale_callhome_proxy_status | bool
+
   - name: configure| Setup the call home customer configuration
     shell:
      cmd: mmcallhome info change --customer-name {{ callhome_params.customer_name }} --customer-id {{ callhome_params.customer_id }} --email {{ callhome_params.customer_email}} --country-code {{ callhome_params.customer_country }}
@@ -65,6 +66,7 @@
 
   - debug:
      msg: "{{ scale_callhome_group.cmd }}"
+    when: scale_callhome_group|bool
 
   - name: configure | Setup the call home schedule configuration
     shell:
@@ -76,6 +78,6 @@
 
   - debug:
      msg: "{{ scale_callhome_schedule_status.cmd }}"
-
+    when: scale_callhome_schedule_status|bool
   when: scale_callhome_config_status.stdout==""
   run_once: true

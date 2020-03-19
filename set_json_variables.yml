@@ -25,7 +25,7 @@
      os: "{{ item.os }}"
      arch: "{{ item.arch }}"
      ip_address: "{{ item.ip_address }}"
-     callhome_params: "{{ callhome }}"
+     #callhome_params: "{{ callhome }}"
      protocols: "{{ protocols }}"
      scale_cluster_quorum: "{{ item.is_quorum_node  }}"
      scale_cluster_manager: "{{ item.is_manager_node }}"

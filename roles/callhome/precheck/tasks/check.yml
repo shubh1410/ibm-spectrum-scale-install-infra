@@ -1,9 +1,5 @@
---- 
-- include_tasks: storage.yml
+---
 - block:
-  - debug:
-          msg: "{{ callhome_params.callhome_group1 }}"
-
   - name: callhome_precheck | Check if callhome is enabled.
     assert:
      that:
@@ -12,22 +8,22 @@
      fail_msg: "Callhome is disabled"
      success_msg: "Callhome is enabled. Proceeding to check if customer information has been supplied."
     when:  ansible_hostname  == callhome_params.callhome_server
-  
+
   - name: callhome_precheck |  Check if customer information has been supplied.
     assert:
      that:
      - callhome_params.customer_name is defined
-     - callhome_params.customer_name|string!=""
+     - callhome_params.customer_name| length > 0
      - callhome_params.customer_email is defined
-     - callhome_params.customer_email|string!=""
+     - callhome_params.customer_email| length > 0
      - callhome_params.customer_id is defined
-     - callhome_params.customer_id|string!=""
+     - callhome_params.customer_id| int > 0
      - callhome_params.customer_country is defined
-     - callhome_params.customer_country|string!=""
-     fail_msg: "Customer information is not defined.Callhome is enabled by default in the install toolkit and is strongly encouraged to be configured.In an Erasure Code Edition setup, you need to have at least 1 non scale-out node that needs to be designated as the callhome server node.Use the following command to designate a node as a callhome server node:./spectrumscale node add node_name -c. If callhome is not desired at this time,please disable callhome using (./spectrumscale callhome disable). and retry this precheck. If desired, callhome can be enabled (./spectrumscale callhome enable), configured(./spectrumscale callhome config) and installed(./spectrumscale install) at a later time with the install toolkit, the management GUI or mmcallhome directly. There are currently no configured callhome settings. Configure callhome with minimum config parameters (./spectrumscale callhome config -n < customer name > -i < customer id > -e < customer email > -cn < customer country >) and retry this precheck."
+     - callhome_params.customer_country| length > 0
+     fail_msg: "Callhome customer information is not defined."
      success_msg: "Customer information is defined. Proceeding to check if proxy is enabled"
     when: ansible_hostname  ==  callhome_params.callhome_server
-  
+
   - name: callhome_precheck | Check if proxy is enabled
     assert:
      that:
@@ -40,6 +36,7 @@
     ignore_errors: yes
     when: ansible_hostname  ==  callhome_params.callhome_server
     register: scale_callhome_proxy_status
+    failed_when: false
 
   - name: callhome_precheck | Check if proxy user and passsword is defined
     assert:
@@ -50,7 +47,7 @@
      - callhome_params.proxy_password|bool
      fail_msg: "Proxy user and password not defined. It is mandatory to define proxy user and password if proxy ip and port is defined"
      success_msg: "Proxy information is defined.Proceeding to perform network check"
-    when: ansible_hostname  ==  callhome_params.callhome_server and 
+    when: ansible_hostname  ==  callhome_params.callhome_server and
           callhome_params.proxy_ip is defined and
           callhome_params.proxy_port is defined and
           callhome_params.proxy_ip|bool and
@@ -67,6 +64,3 @@
   - debug:
      msg: "Callhome precheck OK"
     when: ansible_hostname  == callhome_params.callhome_server
-    #- debug:
-    # msg: "{{ inventory_hostname }}"
-     #run_once: true

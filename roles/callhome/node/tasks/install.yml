@@ -46,6 +46,14 @@
   set_fact:
     scale_install_all_rpms: []
 
+- name: install | Set the extracted package directory path
+  set_fact:
+    callhome_extracted_path: "{{ gpfs_extracted_path }}/gpfs_rpms"
+
+- name: install | Stat extracted packages directory
+  stat:
+    path: "{{ callhome_extracted_path }}"
+  register: scale_extracted_gpfs_dir
 
 - include_tasks: install_{{ scale_installmethod }}.yml
 
