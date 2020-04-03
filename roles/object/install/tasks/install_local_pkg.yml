@@ -46,7 +46,7 @@
 
 - name: install | Stat extracted packages
   stat:
-   path:  "{{ nfs_extracted_path }}"
+   path:  "{{ object_extracted_path }}"
   register: scale_install_gpfs_rpmdir
 
 - block:  ## when: not scale_install_gpfs_rpmdir.stat.exists
@@ -80,11 +80,11 @@
    localpkg: "{{ scale_install_localpkg_tmpdir_path + '/' + scale_install_localpkg_path | basename }}"
   command: "{{ localpkg + ' --silent' }}"
   args:
-   creates:  "{{ nfs_extracted_path }}"
+   creates:  "{{ object_extracted_path }}"
 
 - name: install | Stat extracted packages
   stat:
-   path:  "{{ nfs_extracted_path }}"
+   path:  "{{ object_extracted_path }}"
   register: scale_install_gpfs_rpmdir
 
 - name: install | Check extracted packages
@@ -105,110 +105,124 @@
    path: "{{ scale_install_localpkg_tmpdir_path + '/' + scale_install_localpkg_path | basename }}"
    state: absent
 
-- name: install | nfs path
+- name: install | object path
   set_fact:
-   nfs_url: 'ganesha_rpms/rhel7/'
-  when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '7'
-
-- name: install | nfs path
-  set_fact:
-   nfs_url: 'ganesha_rpms/rhel8/'
+   object_url: 'object_rpms/rhel7/'
   when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '8'
 
-- name: install | zimon path
+- name: install | object path
   set_fact:
-   zimon_url: 'zimon_rpms/rhel7/'
+   object_url: 'object_rpms/rhel8/'
   when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '7'
-
-- name: install | zimon path
-  set_fact:
-   zimon_url: 'zimon_rpms/rhel8/'
-  when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '8'
-
 #
 
-# Find nfs rpms
+# Find object rpms
 
 #
 - block:  ## when: host is defined as a protocol node
 
-  - name: install | Find gpfs.nfs-ganesha (gpfs.nfs-ganesha) RPM
+  - name: install | Find spectrum-scale-object RPMs
     find:
-     paths:  "{{ nfs_extracted_path }}/{{ nfs_url }}"
-     patterns: gpfs.nfs-ganesha*.rpm
-    register: scale_install_gpfs_nfs
-
-  - name: install | Check valid GPFS (gpfs.nfs-ganesha) RPM
+     paths:  "{{ object_extracted_path }}/{{ object_url }}"
+     patterns: spectrum-scale-object*.rpm
+    register: scale_install_gpfs_object
+    #  - debug:
+    #     msg: "{{ scale_install_gpfs_nfs }}"
+  - name: install | Check valid spectrum-scale-object RPM
     assert:
-     that: scale_install_gpfs_nfs.matched > 0
-     msg: "No GPFS nfs ganesha(gpfs.nfs-ganesha) RPM found {{ nfs_extracted_path }}/{{ nfs_url }}gpfs.nfs-ganesha*.rpm"
+     that: scale_install_gpfs_object.matched > 0
+     msg: "No python RPM found {{ object_extracted_path }}/{{ object_url }}spectrum-scale-object*.rpm"
 
-  - name: install | Add GPFS nfs ganesha RPMs to list
+  - name: install | Add python RPMs to list
     vars:
-     current_rpm:  "{{ nfs_extracted_path }}/{{ nfs_url }}{{ item }}.rpm"
+     current_rpm:  "{{ object_extracted_path }}/{{ object_url }}{{ item.path| basename | regex_replace('\\.rpm$', '') }}.rpm"
     set_fact:
      scale_install_all_rpms: "{{ scale_install_all_rpms + [ current_rpm ] }}"
     with_items:
-    - "{{ scale_install_gpfs_nfs.files.0.path | basename | regex_replace('\\.rpm$', '') }}"
+    - "{{ scale_install_gpfs_object.files }}"
+ 
 
+- block:  ## when: host is defined as a protocol node
 
-- block:
-  - name: install | Find gpfs.nfs-ganesha-utils (gpfs.nfs-ganesha) RPM
+  - name: install | Find babel RPMs
     find:
-     paths:  "{{ nfs_extracted_path }}/{{ nfs_url }}"
-     patterns: gpfs.nfs-ganesha-utils*.rpm
-    register: scale_install_gpfs_nfs
-
-  - name: install | Check valid GPFS (gpfs.nfs-ganesha) RPM
+     paths:  "{{ object_extracted_path }}/{{ object_url }}"
+     patterns: babel*.rpm
+    register: scale_install_gpfs_object
+   
+  - name: install | Check valid babel RPM
     assert:
-     that: scale_install_gpfs_nfs.matched > 0
-     msg: "No GPFS utils (gpfs.nfs-ganesha-utils) RPM found {{ nfs_extracted_path }}/{{ nfs_url }}gpfs.nfs-ganesha-utils*.rpm"
+     that: scale_install_gpfs_object.matched > 0
+     msg: "No babel RPM found {{ object_extracted_path }}/{{ object_url }}babel*.rpm"
 
-  - name: install | Add GPFS nfs RPMs to list
+  - name: install | Add babel RPMs to list
     vars:
-     current_rpm:  "{{ nfs_extracted_path }}/{{ nfs_url }}{{ item }}.rpm"
+     current_rpm:  "{{ object_extracted_path }}/{{ object_url }}{{ item.path| basename | regex_replace('\\.rpm$', '') }}.rpm"
     set_fact:
      scale_install_all_rpms: "{{ scale_install_all_rpms + [ current_rpm ] }}"
     with_items:
-    - "{{ scale_install_gpfs_nfs.files.0.path | basename | regex_replace('\\.rpm$', '') }}"
+    - "{{ scale_install_gpfs_object.files }}"
+  when: false
+- block:  ## when: host is defined as a protocol node
 
-- block:
-  - name: install | Find gpfs.nfs-ganesha-gpfs (gpfs.nfs-ganesha) RPM
+  - name: install | Find crudini RPMs
     find:
-     paths:  "{{ nfs_extracted_path }}/{{ nfs_url }}"
-     patterns: gpfs.nfs-ganesha-gpfs*.rpm
-    register: scale_install_gpfs_nfs
+     paths:  "{{ object_extracted_path }}/{{ object_url }}"
+     patterns: crudini*.rpm
+    register: scale_install_gpfs_object
 
-  - name: install | Check valid GPFS (gpfs.nfs-ganesha) RPM
+  - name: install | Check valid crudini RPM
     assert:
-     that: scale_install_gpfs_nfs.matched > 0
-     msg: "No GPFS utils (gpfs.nfs-ganesha-gpfs) RPM found {{ nfs_extracted_path }}/{{ nfs_url }}gpfs.nfs-ganesha-gpfs*.rpm"
+     that: scale_install_gpfs_object.matched > 0
+     msg: "No crudini RPM found {{ object_extracted_path }}/{{ object_url }}crudini*.rpm"
 
-  - name: install | Add GPFS nfs RPMs to list
+  - name: install | Add crudini RPMs to list
     vars:
-     current_rpm: "{{ nfs_extracted_path }}/{{ nfs_url }}{{ item }}.rpm"
+     current_rpm:  "{{ object_extracted_path }}/{{ object_url }}{{ item.path| basename | regex_replace('\\.rpm$', '') }}.rpm"
     set_fact:
      scale_install_all_rpms: "{{ scale_install_all_rpms + [ current_rpm ] }}"
     with_items:
-    - "{{ scale_install_gpfs_nfs.files.0.path | basename | regex_replace('\\.rpm$', '') }}"
+    - "{{ scale_install_gpfs_object.files }}"
+  when: false
+- block:  ## when: host is defined as a protocol node
 
-- block:
-  - name: install | Find gpfs.pm-ganesha (gpfs.pm-ganesha) RPM
+  - name: install | Find isa RPMs
     find:
-     paths:  "{{ nfs_extracted_path }}/{{ zimon_url }}"
-     patterns: gpfs.pm-ganesha*.rpm
-    register: scale_install_gpfs_nfs
+     paths:  "{{ object_extracted_path }}/{{ object_url }}"
+     patterns: isa*.rpm
+    register: scale_install_gpfs_object
 
-  - name: install | Check valid GPFS (gpfs.pm-ganesha) RPM
+  - name: install | Check valid crudini RPM
     assert:
-     that: scale_install_gpfs_nfs.matched > 0
-     msg: "No GPFS utils (gpfs.pm-ganesha) RPM found {{ nfs_extracted_path }}/{{ zimon_url }}gpfs.pm-ganesha*.rpm"
+     that: scale_install_gpfs_object.matched > 0
+     msg: "No isa RPM found {{ object_extracted_path }}/{{ object_url }}isa*.rpm"
 
-  - name: install | Add GPFS zimon RPMs to list
+  - name: install | Add isa RPMs to list
     vars:
-     current_rpm: "{{ nfs_extracted_path }}/{{ zimon_url }}{{ item }}.rpm"
+     current_rpm:  "{{ object_extracted_path }}/{{ object_url }}{{ item.path| basename | regex_replace('\\.rpm$', '') }}.rpm"
     set_fact:
      scale_install_all_rpms: "{{ scale_install_all_rpms + [ current_rpm ] }}"
     with_items:
-    - "{{ scale_install_gpfs_nfs.files.0.path | basename | regex_replace('\\.rpm$', '') }}"
+    - "{{ scale_install_gpfs_object.files }}"
+  when: false
+- block:  ## when: host is defined as a protocol node
 
+  - name: install | Find isa RPMs
+    find:
+     paths:  "{{ object_extracted_path }}/{{ object_url }}"
+     patterns: isa*.rpm
+    register: scale_install_gpfs_object
+
+  - name: install | Check valid crudini RPM
+    assert:
+     that: scale_install_gpfs_object.matched > 0
+     msg: "No isa RPM found {{ object_extracted_path }}/{{ object_url }}isa*.rpm"
+
+  - name: install | Add isa RPMs to list
+    vars:
+     current_rpm:  "{{ object_extracted_path }}/{{ object_url }}{{ item.path| basename | regex_replace('\\.rpm$', '') }}.rpm"
+    set_fact:
+     scale_install_all_rpms: "{{ scale_install_all_rpms + [ current_rpm ] }}"
+    with_items:
+    - "{{ scale_install_gpfs_object.files }}"
+  when: false

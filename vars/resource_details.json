@@ -132,9 +132,9 @@
       "callhome_schedule": [daily,weekly]
   },
   "protocols":{
-      "object": False,
-      "smb": True,
-      "nfs": True,
+      "object": true,
+      "smb": true,
+      "nfs": true,
       "hdfs": False,
       "export_ip_pool": [9.11.84.136,9.11.84.135,9.11.84.134,9.11.84.131],
       "filesystem": cesSharedRoot,

@@ -1,0 +1,176 @@
+---
+- name: Initialize
+  set_fact:
+   object_nodes_list: []
+
+- name: Collect all object nodes
+  set_fact:
+   object_nodes_list: "{{ object_nodes_list + [hostvars[item]['fqdn']] }}"
+  when: hostvars[item]['is_protocol_node']|bool and hostvars[item]['is_object_store']|bool
+  with_items:
+   - "{{ groups['all'] }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Check if atleast one object node is configured
+  assert:
+   that:
+   - object_nodes_list|length > 0
+   fail_msg: "No object nodes configured"
+
+- name: Check if object is enabled
+  assert:
+   that:
+   - protocols.object|bool
+   fail_msg: "Object is not enabled"
+  run_once: true
+
+- name: Collect status of service openstack-selinux
+  shell:
+   cmd: systemctl|grep "openstack-selinux"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-selinux is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-selinux found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-selinux) and disable (systemctl disable openstack-selinux) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-swift
+  shell:
+   cmd: systemctl|grep "openstack-swift"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-swift is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-swift found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-swift) and disable (systemctl disable openstack-swift) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-swift-account
+  shell:
+   cmd: systemctl|grep "openstack-swift-account"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-swift-account is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-swift-account found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-swift-account) and disable (systemctl disable openstack-swift-account) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-swift-proxy
+  shell:
+   cmd: systemctl|grep "openstack-swift-proxy"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-swift-proxy is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-swift-proxy found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-swift-proxy) and disable (systemctl disable openstack-swift-proxy) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service python-openstackclient
+  shell:
+   cmd: systemctl|grep "python-openstackclient"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service python-openstackclient is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service python-openstackclient found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop python-openstackclient) and disable (systemctl disable python-openstackclient) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-utils
+  shell:
+   cmd: systemctl|grep "openstack-utils"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-utils is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-utils found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-utils) and disable (systemctl disable openstack-utils) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-swift-container
+  shell:
+   cmd: systemctl|grep "openstack-swift-container"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-swift-container is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-swift-container found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-swift-container) and disable (systemctl disable openstack-swift-container) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service python-oslo-config
+  shell:
+   cmd: systemctl|grep "python-oslo-config"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service python-oslo-config is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service python-oslo-config found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop python-oslo-config) and disable (systemctl disable python-oslo-config) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-swift-object
+  shell:
+   cmd: systemctl|grep "openstack-swift-object"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-swift-object is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-swift-object found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-swift-object) and disable (systemctl disable openstack-swift-object) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
+
+- name: Collect status of service openstack-keystone
+  shell:
+   cmd: systemctl|grep "openstack-keystone"
+  register: object_status
+  ignore_errors: true
+
+- name: Check if service openstack-keystone is running
+  assert:
+   that:
+   - object_status.rc > 0
+   fail_msg: "Service openstack-keystone found running on {{ ansible_hostname }}. Which conflicts with the installation of object store.
+SUGGESTTED ACTION- Run commands to stop (systemctl stop openstack-keystone) and disable (systemctl disable openstack-keystone) this service on node {{ ansible_hostname }}"
+  when: ansible_fqdn in object_nodes_list
+  any_errors_fatal: true
