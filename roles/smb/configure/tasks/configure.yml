@@ -9,3 +9,14 @@
   shell:
    cmd: mmces service enable smb
   when: smb_status.rc > 0 and ansible_fqdn in smb_nodes_list
+
+- name: Stat ZIMonSensors_smb.cfg file
+  stat:
+   path: /opt/IBM/zimon/defaults/ZIMonSensors_smb.cfg
+  register: config_file_status
+
+- name: Configuring SMB performance monitoring sensors
+  shell:
+   cmd: mmperfmon config add --sensors=/opt/IBM/zimon/defaults/ZIMonSensors_smb.cfg
+  when: config_file_status.stat.exists
+

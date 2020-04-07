@@ -21,7 +21,8 @@
       "is_node_offline" : False,
       "is_node_reachable" : True,
       "is_node_excluded" : False,
-      "is_mestor_node" : False
+      "is_mestor_node" : False,
+      "scale_zimon_collector" : true
     }, 
     {
       "fqdn" : slitherfang-vm6.tuc.stglabs.ibm.com,
@@ -44,8 +45,8 @@
       "is_node_offline" : False,
       "is_node_reachable" : True,
       "is_node_excluded" : False,
-      "is_mestor_node" : False
- 
+      "is_mestor_node" : False,
+      "scale_zimon_collector" : false
     }, 
     {
       "fqdn" : slitherfang-vm7.tuc.stglabs.ibm.com,
@@ -68,8 +69,8 @@
       "is_node_offline" : False,
       "is_node_reachable" : True,
       "is_node_excluded" : False,
-      "is_mestor_node" : False
-
+      "is_mestor_node" : False,
+      "scale_zimon_collector" : false
     },
     {
       "fqdn" : slitherfang-vm8.tuc.stglabs.ibm.com,
@@ -92,8 +93,8 @@
       "is_node_offline" : False,
       "is_node_reachable" : True,
       "is_node_excluded" : False,
-      "is_mestor_node" : False
-
+      "is_mestor_node" : False,
+      "scale_zimon_collector" : false
     }
   ],
   "scale_storage":[
