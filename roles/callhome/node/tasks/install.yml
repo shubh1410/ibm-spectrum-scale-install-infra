@@ -42,13 +42,13 @@
 #
 # Run chosen installation method to get list of RPMs
 #
-- name: install | Initialize list of RPMs
+- name: install | Initialize list of packages
   set_fact:
-    scale_install_all_rpms: []
+    scale_install_all_packages: []
 
 - name: install | Set the extracted package directory path
   set_fact:
-    callhome_extracted_path: "{{ gpfs_extracted_path }}/gpfs_rpms"
+    callhome_extracted_path: "{{ gpfs_extracted_path }}"
 
 - name: install | Stat extracted packages directory
   stat:
@@ -58,7 +58,7 @@
 - include_tasks: install_{{ scale_installmethod }}.yml
 
 - debug:
-        msg: "{{ scale_install_all_rpms }}"
+        msg: "{{ scale_install_all_packages }}"
 
 - meta: flush_handlers
 
@@ -67,6 +67,14 @@
 #
 - name: install | Install GPFS Callhome RPMs
   package:
-    name: "{{ scale_install_all_rpms }}"
-    state: present
+   name: "{{ scale_install_all_packages }}"
+   state: present
   when: ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
+
+- name: install| Install GPFS Callhome deb
+  apt:
+   deb: "{{ item }}"
+   state: present
+  when: ansible_pkg_mgr == 'apt'
+  with_items:
+  - "{{ scale_install_all_packages }}"

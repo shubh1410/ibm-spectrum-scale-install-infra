@@ -1,10 +1,10 @@
 {
   "node_details": [
     {
-      "fqdn" : slitherfang-vm5.tuc.stglabs.ibm.com,
-      "os" : rhel8,
+      "fqdn" :  shortwing-vm1.tuc.stglabs.ibm.com,
+      "os" : ubuntu,
       "arch" : x86_64,
-      "ip_address" : 9.11.84.162,
+      "ip_address" : 9.11.85.161,
       "is_admin_node" : True,
       "is_object_store" : False,
       "is_nfs" : True,
@@ -25,10 +25,10 @@
       "scale_zimon_collector" : true
     }, 
     {
-      "fqdn" : slitherfang-vm6.tuc.stglabs.ibm.com,
-      "os" : rhel8,
+      "fqdn" :  shortwing-vm2.tuc.stglabs.ibm.com,
+      "os" : ubuntu,
       "arch" : x86_64,
-      "ip_address" : 9.11.84.163,
+      "ip_address" : 9.11.85.162,
       "is_admin_node" : False,
       "is_object_store" : False,
       "is_nfs" : False,
@@ -49,10 +49,10 @@
       "scale_zimon_collector" : false
     }, 
     {
-      "fqdn" : slitherfang-vm7.tuc.stglabs.ibm.com,
+      "fqdn" : shortwing-vm3.tuc.stglabs.ibm.com,
       "os" : rhel8,
       "arch" : x86_64,
-      "ip_address" : 9.11.84.164,
+      "ip_address" : 9.11.85.163,
       "is_admin_node" : False,
       "is_object_store" : False,
       "is_nfs" : True,
@@ -73,10 +73,10 @@
       "scale_zimon_collector" : false
     },
     {
-      "fqdn" : slitherfang-vm8.tuc.stglabs.ibm.com,
-      "os" : rhel8,
+      "fqdn" : shortwing-vm4.tuc.stglabs.ibm.com,
+      "os" : ubuntu,
       "arch" : x86_64,
-      "ip_address" : 9.11.84.165,
+      "ip_address" : 9.11.85.164,
       "is_admin_node" : False,
       "is_object_store" : False,
       "is_nfs" : True,
@@ -128,8 +128,8 @@
       "proxy_user":,
       "proxy_password":,
       "proxy_location":,
-      "callhome_server": slitherfang-vm5,
-      "callhome_group1": [slitherfang-vm5,slitherfang-vm6,slitherfang-vm7,slitherfang-vm8],
+      "callhome_server": shortwing-vm1,
+      "callhome_group1": [shortwing-vm1,shortwing-vm2,shortwing-vm3,shortwing-vm4],
       "callhome_schedule": [daily,weekly]
   },
   "protocols":{
