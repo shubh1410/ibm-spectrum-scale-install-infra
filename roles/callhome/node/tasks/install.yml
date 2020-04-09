@@ -65,16 +65,16 @@
 #
 # Install or update RPMs
 #
-- name: install | Install GPFS Callhome RPMs
+- name: install | Install GPFS Callhome packages
   package:
    name: "{{ scale_install_all_packages }}"
    state: present
-  when: (ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf') or scale_install_callhome_repository_url is defined
+  when: (ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf') or scale_install_repository_url is defined
 
 - name: install| Install GPFS Callhome deb
   apt:
    deb: "{{ item }}"
    state: present
-  when: ansible_pkg_mgr == 'apt' and scale_install_callhome_repository_url is not defined
+  when: ansible_pkg_mgr == 'apt' and scale_install_repository_url is not defined
   with_items:
   - "{{ scale_install_all_packages }}"

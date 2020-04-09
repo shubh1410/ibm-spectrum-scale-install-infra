@@ -6,7 +6,7 @@
   tasks:
   - name: Read all intermediate output from Resource Details
     include_vars:
-     dir: vars
+     dir: vars1
      extensions:
      - json
 

@@ -3,6 +3,7 @@
   shell:
    cmd: mmlsconfig | grep 'cesSharedRoot '
   register: ces_status
+  ignore_errors: true
 
 - name: Configuring cesSharedRoot
   shell:

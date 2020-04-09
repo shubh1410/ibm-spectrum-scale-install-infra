@@ -35,9 +35,9 @@
 
 # Run chosen installation method to get list of RPMs
 
-- name: install | Initialize list of RPMs
+- name: install | Initialize list of packages
   set_fact:
-   scale_install_all_rpms: []
+   scale_install_all_packages: []
 
 - name: install | Set the extracted package directory path
   set_fact:
@@ -53,11 +53,21 @@
 - meta: flush_handlers
 
 # Install or update RPMs
-- name: Install GPFS nfs RPMs
+- name: Install GPFS nfs packages
   package:
-   name: "{{ scale_install_all_rpms }}"
+   name: "{{ scale_install_all_packages }}"
    state: present
-  when: (ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf') and ansible_fqdn in nfs_nodes_list
+  when: (ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf' or scale_install_repository_url is defined) and ansible_fqdn in nfs_nodes_list
+
+- debug:
+        msg: "{{ scale_install_all_packages }}"
+- name: install| Install GPFS NFS deb
+  apt:
+   deb: "{{ item }}"
+   state: present
+  when: ansible_pkg_mgr == 'apt' and scale_install_repository_url is not defined and ansible_fqdn in nfs_nodes_list
+  with_items:
+  - "{{ scale_install_all_packages }}"
 
 - name: Install rpcbind
   package: name=rpcbind state=present
