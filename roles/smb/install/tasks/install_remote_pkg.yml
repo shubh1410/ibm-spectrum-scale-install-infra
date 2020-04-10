@@ -80,34 +80,34 @@
    smb_url: 'smb_rpms/rhel8/'
   when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '8'
 
-# Find smb rpms
+- name: install | smb path
+  set_fact:
+   smb_url: 'smb_debs/ubuntu/ubuntu16/'
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '16'
 
-#
+- name: install | smb path
+  set_fact:
+   smb_url: 'smb_debs/ubuntu/ubuntu18/'
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '18'
+
 - block:  ## when: host is defined as a protocol node
 
-  - name: install | Find gpfs.smb (gpfs.smb) RPM
+  - name: install | Find gpfs.smb (gpfs.smb) package
     find:
-     paths: "{{ smb_extracted_path }}/{{ smb_url }}"
-     patterns: gpfs.smb*.rpm
+     paths:  "{{ smb_extracted_path }}/{{ smb_url }}"
+     patterns: gpfs.smb*
     register: scale_install_gpfs_smb
 
-  - debug:
-     msg: "{{ scale_install_gpfs_smb }}"
-
-  - name: install | Check valid GPFS (gpfs.smb) RPM
+  - name: install | Check valid GPFS (gpfs.smb) package
     assert:
      that: scale_install_gpfs_smb.matched > 0
-     msg: "No GPFS smb(gpfs.smb) RPM found {{ smb_extracted_path }}/{{ smb_url }}gpfs.smb*.rpm"
+     msg: "No GPFS smb (gpfs.smb) package found {{ smb_extracted_path }}/{{ smb_url }}gpfs.smb*"
 
-
-  - debug:
-     msg: "{{ scale_install_gpfs_smb }}"
-
-  - name: install | Add GPFS smb RPMs to list
+  - name: install | Add GPFS smb package to list
     vars:
-     current_rpm: "{{ smb_extracted_path }}/{{ smb_url }}{{ item }}.rpm"
+     current_package:  "{{ item }}"
     set_fact:
-     scale_install_all_rpms: "{{ scale_install_all_rpms + [ current_rpm ] }}"
+     scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
     with_items:
-    - "{{ scale_install_gpfs_smb.files.0.path | basename | regex_replace('\\.rpm$', '') }}"
+    - "{{ scale_install_gpfs_smb.files.0.path }}"
 

@@ -1,5 +1,4 @@
 ---
-
 # Install or update RPMs
 # Ensure that installation method was chosen during previous role
 - block:
@@ -35,9 +34,9 @@
 
 # Run chosen installation method to get list of RPMs
 
-- name: install | Initialize list of RPMs
+- name: install | Initialize list of packages
   set_fact:
-   scale_install_all_rpms: []
+   scale_install_all_packages: []
 
 - name: install | Set the extracted package directory path
   set_fact:
@@ -50,16 +49,20 @@
 
 - include_tasks: install_{{ scale_installmethod }}.yml
 
-- debug:
-
-        msg: "{{ scale_install_all_rpms }}"
-
-- meta: flush_handlers
-
-# Install or update RPMs
-- name: install | Install GPFS smb RPMs
+- name: Install GPFS smb packages
   package:
-   name: "{{ scale_install_all_rpms }}"
+   name: "{{ scale_install_all_packages }}"
    state: present
-  when: (ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf') and ansible_fqdn in smb_nodes_list
+  when: (ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf' or scale_install_repository_url is defined) and ansible_fqdn in smb_nodes_list
+
+- debug:
+        msg: "{{ scale_install_all_packages }}"
+
+- name: install| Install GPFS SMB deb
+  apt:
+   deb: "{{ item }}"
+   state: present
+  when: ansible_pkg_mgr == 'apt' and scale_install_repository_url is not defined and ansible_fqdn in smb_nodes_list
+  with_items:
+  - "{{ scale_install_all_packages }}"
 
