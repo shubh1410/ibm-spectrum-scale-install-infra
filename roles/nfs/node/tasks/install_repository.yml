@@ -24,14 +24,25 @@
     - ansible_pkg_mgr == 'apt'
     - scale_install_repository_url != 'existing'
 
-- name: install | Add GPFS callhome packages to list
+- name: install | Configure nfs zypper repository
+  zypper_repository:
+    name: spectrum-scale-nfs-rpms
+    repo: "{{ scale_install_nfs_repository_rpms_sles }}"
+    runrefresh: yes
+    state: present
+    disable_gpg_check: yes
+  when:
+    - ansible_pkg_mgr == 'zypper'
+    - scale_install_repository_url != 'existing'
+
+- name: install | Add GPFS nfs packages to list
   set_fact:
     scale_install_all_packages: "{{ scale_install_all_packages + [ item ] }}"
   with_items:
     - "{{ scale_nfs_rpms }}"
-  when: ansible_distribution == 'Redhat'
+  when: ansible_distribution == 'Redhat' or ansible_distribution == 'SLES'
 
-- name: install | Add GPFS callhome packages to list
+- name: install | Add GPFS nfs packages to list
   set_fact:
     scale_install_all_packages: "{{ scale_install_all_packages + [ item ] }}"
   with_items:

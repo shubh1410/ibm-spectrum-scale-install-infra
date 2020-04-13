@@ -99,7 +99,7 @@
 - name: install | callhome path
   set_fact:
    callhome_url: 'gpfs_rpms/'
-  when: ansible_distribution == 'RedHat'
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'SLES'
 
 - name: install | callhome path
   set_fact:

@@ -112,6 +112,11 @@
    nfs_url: 'ganesha_debs/ubuntu16/'
   when: ansible_distribution == 'Ubuntu'
 
+- name: install | nfs path
+  set_fact:
+   nfs_url: 'ganesha_rpms/sles12/'
+  when: ansible_distribution == 'SLES'
+
 - name: install | zimon path
   set_fact:
    zimon_url: 'zimon_rpms/rhel7/'
@@ -121,6 +126,16 @@
   set_fact:
    zimon_url: 'zimon_rpms/rhel8/'
   when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '8'
+
+- name: install | zimon path
+  set_fact:
+   zimon_url: 'zimon_rpms/sles12/'
+  when: ansible_distribution == 'SLES' and ansible_distribution_major_version == '12'
+
+- name: install | zimon path
+  set_fact:
+   zimon_url: 'zimon_rpms/sles15/'
+  when: ansible_distribution == 'SLES' and ansible_distribution_major_version == '15'
 
 - name: install | zimon path
   set_fact:
@@ -202,7 +217,7 @@
      scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
     with_items:
     - "{{ scale_install_gpfs_nfs.files.0.path }}"
-  when: ansible_distribution == 'RedHat'
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'SLES'
 
 - block:
   - name: install | Find gpfs.nfs-ganesha-gpfs (gpfs.nfs-ganesha) package
@@ -285,6 +300,3 @@
      scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
     with_items:
     - "{{ scale_install_gpfs_nfs.files.0.path }}"
-  
-
-
