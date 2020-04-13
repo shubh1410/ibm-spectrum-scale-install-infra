@@ -80,10 +80,6 @@
    callhome_url: 'gpfs_rpms/'
   when: ansible_distribution == 'RedHat' or ansible_distribution == 'SLES'
 
-
-   #
-   # find gpfs.java package and add to rpm list
-   #
 - block:
   - name: install | Find gpfs.java (gpfs.java) package
     find:
@@ -96,18 +92,6 @@
      that: scale_install_gpfs_java.matched > 0
      msg: "No GPFS java (gpfs.java) package found: {{ callhome_extracted_path }}/{{ callhome_url }}/gpfs.java*"
 
-  - name: install | Add GPFS java package to list
-    vars:
-     current_package: "{{ item }}"
-    set_fact:
-     scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
-    with_items:
-    - "{{ scale_install_gpfs_java.files.0.path }}"
-
-
-#
-# find gpfs.callhomE package and add it to rpm list
-#
 - block:
   - name: install | Find gpfs.callhome (gpfs.callhome) package
     find:
@@ -120,10 +104,12 @@
      that: scale_install_gpfs_callhome.matched > 0
      msg: "No GPFS callhome (gpfs.callhome) package found: {{ callhome_extracted_path }}/{{ callhome_url }}gpfs.callhome-ecc-client*"
 
-  - name: install | Add GPFS callhome package to list
+- name: install | Add GPFS callhome package to list
     vars:
      current_package: "{{ item }}"
     set_fact:
      scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
     with_items:
+    - "{{ scale_install_gpfs_java.files.0.path }}"
     - "{{ scale_install_gpfs_callhome.files.0.path }}"
+

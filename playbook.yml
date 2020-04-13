@@ -4,9 +4,9 @@
 - hosts: scale_node
   vars:
   - scale_version: 5.0.5.0
-    #- scale_install_localpkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
+  - scale_install_localpkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
     #- scale_install_remotepkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
-  - scale_install_repository_url: http:/9.11.84.162/smb_rpms/
+    #- scale_install_repository_url: http:/9.11.84.162/smb_rpms/
   roles:
           #- core/precheck
           #- core/node
@@ -17,7 +17,7 @@
           #- zimon/cluster
           #- zimon/postcheck
           #- callhome/precheck
-          #- callhome/node
+     - callhome/node
           #- callhome/cluster
           #- callhome/postcheck
     #- ntp/precheck
@@ -30,7 +30,7 @@
      #- nfs/cluster
      # - nfs/postcheck
      #- smb/precheck
-   - smb/install
+     #- smb/install
       #- smb/configure
       #- smb/postcheck
     #- object/install
