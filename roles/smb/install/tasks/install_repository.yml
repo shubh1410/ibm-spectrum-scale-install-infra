@@ -14,7 +14,7 @@
 - name: install | Configure smb APT repository
   apt_repository:
     filename: spectrum-scale-smb-debs
-    repo: "deb [trusted=yes] {{ scale_install_smb_repository_debs }} ./"
+    repo: "deb [trusted=yes] {{ scale_install_smb_repository_debs }} ubuntu/ubuntu16/"
     validate_certs: no
     state: present
     update_cache: yes
@@ -23,6 +23,24 @@
   when:
     - ansible_pkg_mgr == 'apt'
     - scale_install_repository_url != 'existing'
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_major_version == '16'
+
+- name: install | Configure smb APT repository
+  apt_repository:
+    filename: spectrum-scale-smb-debs
+    repo: "deb [trusted=yes] {{ scale_install_smb_repository_debs }} ubuntu/ubuntu18/"
+    validate_certs: no
+    state: present
+    update_cache: yes
+    codename: IBM Spectrum Scale (SMB debs)
+    mode: 0777
+  when:
+    - ansible_pkg_mgr == 'apt'
+    - scale_install_repository_url != 'existing'
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_major_version == '18'
+
 
 - name: install | Add GPFS smb packages to list
   set_fact:

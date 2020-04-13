@@ -7,7 +7,7 @@
     set_fact:
      scale_installmethod: repository
     when:
-    - scale_install_nfs_repository_url is defined
+    - scale_install_repository_url is defined
 
   - name: install | Check for localpkg installation method
     set_fact:

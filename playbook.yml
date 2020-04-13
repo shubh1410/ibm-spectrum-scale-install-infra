@@ -5,8 +5,8 @@
   vars:
   - scale_version: 5.0.5.0
     #- scale_install_localpkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
-  - scale_install_remotepkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
-    #- scale_install_repository_url: http:/9.11.84.162/gpfs_debs/
+    #- scale_install_remotepkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
+  - scale_install_repository_url: http:/9.11.84.162/smb_debs/
   roles:
           #- core/precheck
           #- core/node
@@ -30,7 +30,7 @@
      #- nfs/cluster
      # - nfs/postcheck
      #- smb/precheck
-    - smb/install
+   - smb/install
       #- smb/configure
       #- smb/postcheck
     #- object/install

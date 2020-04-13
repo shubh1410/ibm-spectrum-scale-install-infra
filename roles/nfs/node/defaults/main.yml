@@ -1,6 +1,6 @@
 ---
 scale_install_nfs_repository_rpms: http://9.11.84.162/ganesha_rpms/
-scale_install_nfs_repository_debs: http://9.11.84.162/ganesha_debs/
+scale_install_nfs_repository_debs: http://9.11.84.162/ganesha_debs/ubuntu16
 
 scale_nfs_rpms:
 - gpfs.nfs-ganesha-gpfs
