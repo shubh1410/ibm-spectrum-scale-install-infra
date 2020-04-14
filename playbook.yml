@@ -16,10 +16,10 @@
   - zimon/node
   - zimon/cluster
   - zimon/postcheck
-  - callhome/precheck
-  - callhome/node
-  - callhome/cluster
-  - callhome/postcheck
+    #- callhome/precheck
+    #- callhome/node
+    #- callhome/cluster
+    #- callhome/postcheck
   - ntp/precheck
   - ntp/node
   - ntp/cluster
