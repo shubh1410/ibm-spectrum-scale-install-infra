@@ -17,7 +17,7 @@
    protocol_nodes_list: "{{ protocol_nodes_list + [hostvars[item]['fqdn']] }}"
   when: hostvars[item]['is_protocol_node']|bool
   with_items:
-   - "{{ groups['scale_node'] }}"
+   - "{{ ansible_play_hosts }}"
   delegate_to: localhost
   run_once: true
 
@@ -29,29 +29,13 @@
   delegate_to: localhost
   run_once: true
 
-- name: Collect admin nodes
-  set_fact:
-   admin_node_list: "{{ admin_node_list + [hostvars[item]['fqdn']] }}"
-  when: hostvars[item]['is_admin_node']|bool
-  with_items:
-  - "{{ groups['scale_node'] }}"
-  delegate_to: localhost
-  run_once: true
-
-- name: Check if admin node is present
-  assert:
-   that:
-   - admin_node_list|length > 0
-   fail_msg: "Atleast one protocol node is required.Please define a protocol node."
-  delegate_to: localhost
-  run_once: true
 
 - name: Collect all protocol node OS
   set_fact:
    os_list: "{{ os_list + [hostvars[item]['os']] }}"
   when: hostvars[item]['is_protocol_node']|bool
   with_items:
-  - "{{ groups['scale_node'] }}"
+  - "{{ ansible_play_hosts }}"
   delegate_to: localhost
 
 - name: Check if OS is unique
@@ -67,7 +51,7 @@
    arch_list: "{{ arch_list + [hostvars[item]['arch']] }}"
   when: hostvars[item]['is_protocol_node']|bool
   with_items:
-  - "{{ groups['scale_node'] }}"
+  - "{{ ansible_play_hosts }}"
   delegate_to: localhost
 
 - name: Check if all protocol nodes have same architecture
@@ -122,12 +106,12 @@ Please define the CES shared root file system mount point using
    fail_msg: "A node IP cannot also be a protocol IP.following IP addresses are not both
 a node and protocol IP before continuing: {{ hostvars[item]['ip_address'] }}"
   with_items:
-  - "{{ groups['scale_node'] }}"
+  - "{{ ansible_play_hosts }}"
   delegate_to: localhost
 
 - name: Get list of GPFS nodes which are not reporting active state
   shell:
-   cmd: mmgetstate|grep "active"
+   cmd: "{{ directory }}mmgetstate|grep active"
   register: inactive_nodes
   ignore_errors: true
 
@@ -139,7 +123,7 @@ a node and protocol IP before continuing: {{ hostvars[item]['ip_address'] }}"
 
 - name: Check if ccr is enabled
   shell:
-   cmd: mmlscluster|grep "CCR"
+   cmd: "{{ directory }}mmlscluster|grep CCR"
   register: ccr_status
 
 - name: Check if ccr is enabled
