@@ -1,7 +1,7 @@
 ---
 - name: Check if SMB is running
   shell:
-   cmd: mmces service list|grep "SMB"
+   cmd: "{{ directory }}mmces service list|grep SMB"
   register: smb_status
   when: ansible_fqdn in smb_nodes_list
   ignore_errors: true
