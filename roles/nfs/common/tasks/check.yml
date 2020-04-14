@@ -14,7 +14,7 @@
 
 - name: Collect all protocol nodes
   set_fact:
-   protocol_nodes_list: "{{ protocol_nodes_list + [hostvars[item]['fqdn']] }}"
+   protocol_nodes_list: "{{ protocol_nodes_list + [hostvars[item]['ansible_fqdn']] }}"
   when: hostvars[item]['is_protocol_node']|bool
   with_items:
    - "{{ ansible_play_hosts }}"
@@ -32,7 +32,7 @@
 
 - name: Collect all protocol node OS
   set_fact:
-   os_list: "{{ os_list + [hostvars[item]['os']] }}"
+   os_list: "{{ os_list + [hostvars[item]['ansible_distribution']] }}"
   when: hostvars[item]['is_protocol_node']|bool
   with_items:
   - "{{ ansible_play_hosts }}"
@@ -48,7 +48,7 @@
 
 - name: Collect all protocol node architecture
   set_fact:
-   arch_list: "{{ arch_list + [hostvars[item]['arch']] }}"
+   arch_list: "{{ arch_list + [hostvars[item]['ansible_architecture']] }}"
   when: hostvars[item]['is_protocol_node']|bool
   with_items:
   - "{{ ansible_play_hosts }}"
@@ -102,9 +102,9 @@ Please define the CES shared root file system mount point using
 - name: Check no protocol ips are also node ips
   assert:
    that:
-   - hostvars[item]['ip_address'] not in protocols.export_ip_pool
+   - hostvars[item]['ansible_default_ipv4']['address'] not in protocols.export_ip_pool
    fail_msg: "A node IP cannot also be a protocol IP.following IP addresses are not both
-a node and protocol IP before continuing: {{ hostvars[item]['ip_address'] }}"
+a node and protocol IP before continuing: {{ hostvars[item]['ansible_default_ipv4']['address'] }}"
   with_items:
   - "{{ ansible_play_hosts }}"
   delegate_to: localhost

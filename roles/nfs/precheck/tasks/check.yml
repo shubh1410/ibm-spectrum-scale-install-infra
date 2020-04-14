@@ -12,10 +12,10 @@
 
 - name: Collect all nfs nodes
   set_fact:
-   nfs_nodes_list: "{{ nfs_nodes_list + [hostvars[item]['fqdn']] }}"
+   nfs_nodes_list: "{{ nfs_nodes_list + [hostvars[item]['ansible_fqdn']] }}"
   when: hostvars[item]['is_protocol_node']|bool and hostvars[item]['is_nfs']|bool
   with_items:
-   - "{{ groups['all'] }}"
+   - "{{ ansible_play_hosts }}"
   delegate_to: localhost
   run_once: true
 

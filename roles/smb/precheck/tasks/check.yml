@@ -5,10 +5,10 @@
 
 - name: Collect all smb nodes
   set_fact:
-   smb_nodes_list: "{{ smb_nodes_list + [hostvars[item]['fqdn']] }}"
+   smb_nodes_list: "{{ smb_nodes_list + [hostvars[item]['ansible_fqdn']] }}"
   when: hostvars[item]['is_protocol_node']|bool and hostvars[item]['is_smb']|bool
   with_items:
-   - "{{ groups['all'] }}"
+   - "{{ ansible_play_hosts }}"
   delegate_to: localhost
   run_once: true
 
