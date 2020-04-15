@@ -1,5 +1,7 @@
 # hosts:
 [cluster01]
 slitherfang-vm5.tuc.stglabs.ibm.com scale_cluster_quorum=true scale_cluster_manager=true is_protocol_node=true is_nfs=true is_smb=true
-slitherfang-vm6.tuc.stglabs.ibm.com scale_cluster_quorum=true scale_cluster_manager=true is_protocol_node=false is_nfs=true is_smb=true
+slitherfang-vm6.tuc.stglabs.ibm.com scale_cluster_quorum=true scale_cluster_manager=true is_protocol_node=true is_nfs=true is_smb=true
 slitherfang-vm7.tuc.stglabs.ibm.com scale_cluster_quorum=true scale_cluster_manager=true is_protocol_node=true is_nfs=true is_smb=true
+slitherfang-vm8.tuc.stglabs.ibm.com scale_cluster_quorum=true scale_cluster_manager=true is_protocol_node=true is_nfs=true is_smb=true
+

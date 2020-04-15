@@ -1,4 +1,10 @@
 ---
+- name: Initialize
+  set_fact:
+   ces_disabled_nodes: []
+   export_ips: ""
+   server_nodes: ""
+
 - name: Collect status of ces shared root
   shell:
    cmd: "{{ directory }}mmlsconfig | grep 'cesSharedRoot '"
@@ -10,19 +16,39 @@
    cmd: "{{ directory }}mmchconfig cesSharedRoot={{ protocols.mountpoint }}"
   when: ces_status.rc > 0
 
+- name: Prepare server nodes string
+  set_fact:
+   server_nodes: "{{ server_nodes + ',' + item|string }}"
+  with_items:
+  - "{{ protocol_nodes_list }}"
+
 - name: Setting server licenses on protocol nodes
   shell:
-   cmd: "{{ directory }}mmchlicense server --accept -N {{ item }}"
+   cmd: "{{ directory }}mmchlicense server --accept -N {{ server_nodes[1:] }}"
+  run_once: true
+
+- name: Collect status of ces nodes
+  shell:
+   cmd: "{{ directory }}mmces node list|grep {{ item }}"
+  register: ces_enable_status
   with_items:
   - "{{ protocol_nodes_list }}"
   run_once: true
+  ignore_errors: true
+
+- name: Collect all nodes on which ces is not enabled
+  set_fact:
+   ces_disabled_nodes: "{{ ces_disabled_nodes + [ item.item ]}}"
+  when: item.rc > 0 
+  with_items:
+  - "{{ ces_enable_status.results }}"
 
 - name: Enabling CES
   shell:
    cmd: "{{ directory }}mmchnode -N {{ item }} --ces-enable"
   with_items:
-  - "{{ protocol_nodes_list }}"
-  when: ces_status.rc > 0
+  - "{{ ces_disabled_nodes }}"
+  when: ces_disabled_nodes|length > 0
   run_once: true
 
 - name: Collect status of ces nodes
@@ -42,12 +68,16 @@
   - "{{ ces_enable_status.results }}"
   run_once: true
 
-- name: Assign export ips as pool
-  shell:
-   cmd: "{{ directory }}mmces address add --ces-ip {{ item }}"
-  when: ansible_fqdn in protocol_nodes_list
+- name: Prepare export ips string
+  set_fact:
+    export_ips: "{{ export_ips + ',' + item|string }}"
   with_items:
   - "{{ protocols.export_ip_pool }}"
+
+- name: Assign export ips as pool
+  shell:
+   cmd: "{{ directory }}mmces address add --ces-ip {{ export_ips[1:] }}"
+  when: ansible_fqdn in protocol_nodes_list
 
 - name: Rebalance CES IPs
   shell:
