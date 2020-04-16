@@ -10,7 +10,7 @@
   roles:
           #- nfs/common
   - nfs/precheck
-  - nfs/node
+    #- nfs/node
     #- nfs/cluster
     #- nfs/postcheck
     #- smb/precheck

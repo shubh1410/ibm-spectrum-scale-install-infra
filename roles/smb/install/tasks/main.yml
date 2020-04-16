@@ -5,5 +5,4 @@
 
 
 - import_tasks: install.yml
-
-  tags: install
+  when: protocols is defined and protocols.smb|bool
