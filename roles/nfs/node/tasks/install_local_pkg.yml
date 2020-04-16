@@ -245,46 +245,23 @@
      that: scale_install_gpfs_nfs_pm.matched > 0
      msg: "No GPFS utils (gpfs.pm-ganesha) package found {{ nfs_extracted_path }}/{{ zimon_url }}gpfs.pm-ganesha*"
 
-- debug:
-      msg: "{{ item }}"
-  with_items:
-  - "{{ scale_install_gpfs_nfs_ganesha.files.0.path }}"
-  - "{{ scale_install_gpfs_nfs_gpfs.files.0.path }}"
-  - "{{ scale_install_gpfs_nfs_pm.files.0.path }}"
-  - "{{ scale_install_gpfs_nfs_utils.files.0.path }}"
-    #- "{{ scale_install_gpfs_nfs_python.files }}"
-    #- "{{ scale_install_gpfs_nfs_doc.files }}"
-  ignore_errors: true
-  run_once: true
-
 - name: install | Add GPFS package to list
   vars:
-   current_package: "{{ item }}"
+   current_package: "{{ item.path }}"
   set_fact:
    scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
   with_items:
-  - "{{ scale_install_gpfs_nfs_python.files.0.path }}"
-  - "{{ scale_install_gpfs_nfs_doc.files.0.path }}"
-  - "{{ scale_install_gpfs_smb.files.0.path }}"
+  - "{{ scale_install_gpfs_nfs_python.files }}"
+  - "{{ scale_install_gpfs_nfs_doc.files }}"
+  - "{{ scale_install_gpfs_smb.files }}"
   when: ansible_distribution == 'Ubuntu'
 
 - name: install | Add GPFS package to list
   vars:
-   current_package: "{{ item }}"
+   current_package: "{{ item.path }}"
   set_fact:
    scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
   with_items:
-  - "{{ scale_install_gpfs_nfs_ganesha.files.0.path }}"
-  - "{{ scale_install_gpfs_nfs_gpfs.files.0.path }}" 
-  - "{{ scale_install_gpfs_nfs_pm.files.0.path }}"
-
-
-- name: install | Add GPFS package to list
-  vars:
-   current_package: "{{ item }}"
-  set_fact:
-   scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
-  with_items:
-  - "{{ scale_install_gpfs_nfs_utils.files.0.path }}"
-  when: ansible_distribution == 'RedHat'
+  - "{{ scale_install_gpfs_nfs_ganesha.files }}" 
+  - "{{ scale_install_gpfs_nfs_pm.files }}"
 

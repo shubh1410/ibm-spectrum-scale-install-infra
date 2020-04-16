@@ -6,7 +6,7 @@
 - name: Collect all smb nodes
   set_fact:
    smb_nodes_list: "{{ smb_nodes_list + [hostvars[item]['ansible_fqdn']] }}"
-  when: hostvars[item]['is_protocol_node']|bool and hostvars[item]['is_smb']|bool
+  when: hostvars[item]['is_protocol_node']|bool
   with_items:
    - "{{ ansible_play_hosts }}"
   delegate_to: localhost
@@ -27,7 +27,7 @@
 
 - name: Collect status of service smb
   shell:
-   cmd: systemctl|grep "smb"
+   cmd: systemctl status smb
   register: smb_status
   ignore_errors: true
 
@@ -35,14 +35,13 @@
   assert:
    that:
    - smb_status.rc > 0
-   fail_msg: "Service smb found running on {{ ansible_hostname }}. Which conflicts with the installation of SMB.
-SUGGESTTED ACTION- Run commands to stop (systemctl stop smb) and disable (systemctl disable smb) this service on node {{ ansible_hostname }}"
+   fail_msg: "Service smb found running on {{ ansible_hostname }}. Which conflicts with the installation of SMB.SUGGESTTED ACTION- Run commands to stop (systemctl stop smb) and disable (systemctl disable smb) this service on node {{ ansible_hostname }}"
   when: ansible_fqdn in smb_nodes_list
   any_errors_fatal: true
 
 - name: Collect status of service smbd
   shell:
-   cmd: systemctl|grep "smbd"
+   cmd: systemctl status smbd
   register: smb_status
   ignore_errors: true
 
@@ -57,7 +56,7 @@ SUGGESTTED ACTION Run commands to stop (systemctl stop smbd) and disable (system
 
 - name: Collect status of service winbind
   shell:
-   cmd: systemctl|grep "winbind"
+   cmd: systemctl status winbind
   register: smb_status
   ignore_errors: true
 
@@ -73,7 +72,7 @@ this service on node {{ ansible_hostname }}"
 
 - name: Collect status of service winbindd
   shell:
-   cmd: systemctl|grep "winbindd"
+   cmd: systemctl status winbindd
   register: smb_status
   ignore_errors: true
 
@@ -89,7 +88,7 @@ this service on node {{ ansible_hostname }}"
 
 - name: Collect status of service ctdb
   shell:
-   cmd: systemctl|grep "ctdb"
+   cmd: systemctl status ctdb
   register: smb_status
   ignore_errors: true
 
@@ -105,7 +104,7 @@ this service on node {{ ansible_hostname }}"
 
 - name: Collect status of service ctdbd
   shell:
-   cmd: systemctl|grep "ctdbd"
+   cmd: systemctl status ctdbd
   register: smb_status
   ignore_errors: true
 
@@ -121,4 +120,3 @@ this service on node {{ ansible_hostname }}"
 
 - debug:
    msg: "SMB precheck ok"
-

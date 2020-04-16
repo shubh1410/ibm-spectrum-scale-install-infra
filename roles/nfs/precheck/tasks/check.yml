@@ -13,7 +13,7 @@
 - name: Collect all nfs nodes
   set_fact:
    nfs_nodes_list: "{{ nfs_nodes_list + [hostvars[item]['ansible_fqdn']] }}"
-  when: hostvars[item]['is_protocol_node']|bool and hostvars[item]['is_nfs']|bool
+  when: hostvars[item]['is_protocol_node']|bool
   with_items:
    - "{{ ansible_play_hosts }}"
   delegate_to: localhost
@@ -28,7 +28,7 @@
 
 - name: Collect status of native nfs
   shell:
-   cmd: systemctl|grep "nfs-client"
+   cmd: systemctl status nfs-server
   register: nfs_status
   when: ansible_fqdn in nfs_nodes_list
   ignore_errors: true
@@ -44,7 +44,7 @@ SUGGESTTED ACTION- Run commands to stop (systemctl stop nfs) and disable (system
 
 - name: Collect status of service nfs-kernel-server
   shell:
-   cmd: systemctl|grep "nfs-kernel-server"
+   cmd: systemctl status nfs-kernel-server
   register: nfs_status
   when: ansible_fqdn in nfs_nodes_list
   ignore_errors: true
@@ -61,7 +61,7 @@ this service on node {{ ansible_hostname }}"
 
 - name: Collect status of service knfs-server
   shell:
-   cmd: systemctl|grep "knfs-server"
+   cmd: systemctl status knfs-server
   register: nfs_status
   when: ansible_fqdn in nfs_nodes_list
   ignore_errors: true

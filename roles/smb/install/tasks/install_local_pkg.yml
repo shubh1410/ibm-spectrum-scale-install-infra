@@ -149,9 +149,9 @@
 
   - name: install | Add GPFS smb package to list
     vars:
-     current_package:  "{{ item }}"
+     current_package:  "{{ item.path }}"
     set_fact:
      scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
     with_items:
-    - "{{ scale_install_gpfs_smb.files.0.path }}"
+    - "{{ scale_install_gpfs_smb.files }}"
 
