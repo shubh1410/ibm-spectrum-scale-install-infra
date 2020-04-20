@@ -110,9 +110,40 @@
 
   - name: install | Add GPFS smb package to list
     vars:
-     current_package:  "{{ item }}"
+     current_package:  "{{ item.path }}"
     set_fact:
      scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
     with_items:
-    - "{{ scale_install_gpfs_smb.files.0.path }}"
+    - "{{ scale_install_gpfs_smb.files }}"
+
+- block:  ## when: host is defined as a protocol node
+
+  - name: install | Find gpfs.smb-debuginfo (gpfs.smb-debuginfo) package
+    find:
+     paths:  "{{ smb_extracted_path }}/{{ smb_url }}"
+     patterns: gpfs.smb-debuginfo*
+    register: scale_install_gpfs_smb_debuginfo
+
+  - name: install | Check valid GPFS (gpfs.smb-debuginfo) package
+    assert:
+     that: scale_install_gpfs_smb_debuginfo.matched > 0
+     msg: "No GPFS smb (gpfs.smb-debuginfo) package found {{ smb_extracted_path }}/{{ smb_url }}gpfs.smb-debuginfo*"
+
+- name: initialize
+  set_fact:
+   debuginfo_package: []
+
+- name: install | Add GPFS package to list
+  set_fact:
+   debuginfo_package: "{{ debuginfo_package + [ item.path ] }}"
+  with_items:
+  - "{{ scale_install_gpfs_smb_debuginfo.files }}"
+
+- name: remove debuginfo from packages
+  set_fact:
+   scale_install_all_packages: "{{ scale_install_all_packages | difference(debuginfo_package)}}"
+  when: not install_debuginfo|bool
+
+- debug:
+   msg: "{{ scale_install_all_packages }}"
 

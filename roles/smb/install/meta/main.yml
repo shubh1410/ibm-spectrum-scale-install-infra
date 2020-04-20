@@ -19,6 +19,7 @@ galaxy_info:
     - scale
     - gpfs
 
-dependencies: 
+dependencies:
+    - core/common 
     - smb/precheck
 

@@ -66,7 +66,7 @@
   with_items:
   - "{{ scale_install_all_packages }}"
 
-- name: install | Install GPFS Callhome packages
+- name: install | Install GPFS SMB packages
   zypper:
    name: "{{ scale_install_all_packages }}"
    state: present
