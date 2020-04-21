@@ -26,7 +26,7 @@
 - name: Setting server licenses on protocol nodes
   shell:
    cmd: "{{ directory }}mmchlicense server --accept -N {{ server_nodes[1:] }}"
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
 
 - name: Collect status of ces nodes
   shell:
@@ -34,7 +34,7 @@
   register: ces_enable_status
   with_items:
   - "{{ protocol_nodes_list }}"
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
   ignore_errors: true
 
 - name: Collect all nodes on which ces is not enabled
@@ -67,7 +67,8 @@
   set_fact:
    service_list: "{{ service_list + ['NFS'] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc == 0
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
+
 - debug:
    msg: "{{ service_list }}"
 - debug:
@@ -87,7 +88,7 @@
   with_items:
   - "{{ ces_disabled_nodes }}"
   when: ces_disabled_nodes|length > 0
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
 
 - name: Collect status of ces nodes
   shell:
@@ -95,7 +96,7 @@
   register: ces_enable_status
   with_items:
   - "{{ protocol_nodes_list }}"
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
 
 - name: Check CES enabled on all nodes
   assert:
@@ -104,7 +105,7 @@
    fail_msg: "CES is not enabled on {{ ansible_hostname }} protocol node"
   with_items:
   - "{{ ces_enable_status.results }}"
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
 
 - name: Prepare export ips string
   set_fact:
@@ -121,4 +122,4 @@
   shell:
    cmd: "{{ directory }}mmces address move --rebalance"
   when: ansible_fqdn in protocol_nodes_list
-  run_once: true
+  delegate_to: "{{ protocol_nodes_list.0 }}"
