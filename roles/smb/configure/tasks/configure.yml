@@ -4,11 +4,12 @@
    cmd: "{{ directory }}mmces service list | head -1 | grep SMB"
   register: smb_status
   ignore_errors: true
+  when: ansible_fqdn in smb_nodes_list
 
 - name: Enable SMB
   shell:
-   cmd: "{{ directory }}mmces service enable smb"
-  when: smb_status.rc > 0 and ansible_fqdn in smb_nodes_list
+   cmd: "{{ directory }}mmces service enable SMB"
+  when: ansible_fqdn in smb_nodes_list
 
 - name: Stat ZIMonSensors_smb.cfg file
   stat:

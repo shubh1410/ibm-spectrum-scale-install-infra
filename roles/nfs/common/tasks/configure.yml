@@ -4,8 +4,8 @@
    ces_disabled_nodes: []
    export_ips: ""
    server_nodes: ""
-   service_list: []
-
+   #service_list: []
+  
 - name: Collect status of ces shared root
   shell:
    cmd: "{{ directory }}mmlsconfig | grep 'cesSharedRoot '"
@@ -44,17 +44,32 @@
   with_items:
   - "{{ ces_enable_status.results }}"
 
+- name: Install arping
+  package:
+   name: arping
+   state: present
+  when: ansible_distribution == 'Ubuntu' and ansible_fqdn in protocol_nodes_list
+
 - name: Check if SMB is running
   shell:
    cmd: "{{ directory }}mmces service list|grep SMB"
   register: service_status
   when: ansible_fqdn in protocol_nodes_list
   ignore_errors: true
+  run_once: true
+
+- name:
+  set_fact:
+   service_list: "{{ service_list + [service_status.stderr|regex_search('SMB')] }}"
+  when: ansible_fqdn in protocol_nodes_list and service_status.rc > 0
+  run_once: true
 
 - name:
   set_fact:
    service_list: "{{ service_list + ['SMB'] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc == 0
+  run_once: true
+
 
 - name: Check if NFS is running
   shell:
@@ -62,15 +77,23 @@
   register: service_status
   when: ansible_fqdn in protocol_nodes_list
   ignore_errors: true
+  run_once: true
+
+- name:
+  set_fact:
+   service_list: "{{ service_list + [service_status.stderr|regex_search('NFS')] }}"
+  when: ansible_fqdn in protocol_nodes_list and service_status.rc > 0
+  run_once: true
 
 - name:
   set_fact:
    service_list: "{{ service_list + ['NFS'] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc == 0
-  delegate_to: "{{ protocol_nodes_list.0 }}"
+  run_once: true
 
 - debug:
    msg: "{{ service_list }}"
+
 - debug:
         msg: "{{ ces_disabled_nodes }}"
 
@@ -89,6 +112,7 @@
   - "{{ ces_disabled_nodes }}"
   when: ces_disabled_nodes|length > 0
   delegate_to: "{{ protocol_nodes_list.0 }}"
+  run_once: true
 
 - name: Collect status of ces nodes
   shell:

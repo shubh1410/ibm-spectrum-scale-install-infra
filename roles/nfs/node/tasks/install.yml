@@ -33,8 +33,7 @@
   run_once: true
   delegate_to: localhost
 
-# Run chosen installation method to get list of RPMs
-
+#Run chosen installation method to get list of RPMs
 - name: install | Initialize list of packages
   set_fact:
    scale_install_all_packages: []
@@ -50,7 +49,7 @@
 
 - include_tasks: install_{{ scale_installmethod }}.yml
 
-- meta: flush_handlers
+  #- meta: flush_handlers
 
 # Install or update RPMs
 - name: Install GPFS nfs packages
