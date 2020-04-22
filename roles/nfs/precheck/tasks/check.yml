@@ -8,8 +8,7 @@
    that:
    - protocols.nfs|bool
    fail_msg: "NFS is not enabled"
-  run_once: true
-
+   
 - name: Collect all nfs nodes
   set_fact:
    nfs_nodes_list: "{{ nfs_nodes_list + [hostvars[item]['ansible_fqdn']] }}"
@@ -19,12 +18,14 @@
   delegate_to: localhost
   run_once: true
 
+- debug:
+        msg: "{{ nfs_nodes_list }}"
+
 - name: Check if atleast one nfs node is configured
   assert:
    that:
    - nfs_nodes_list|length > 0
    fail_msg: "No nfs nodes configured"
-  run_once: true
 
 - name: Collect status of native nfs
   shell:

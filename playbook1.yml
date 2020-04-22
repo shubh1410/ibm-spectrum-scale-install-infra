@@ -8,8 +8,8 @@
     #- scale_install_remotepkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
     #- scale_install_repository_url: http:/9.11.84.162/smb_rpms/
   roles:
-          #- nfs/common
-  - nfs/precheck
+   - nfs/common
+          #- nfs/precheck
     #- nfs/node
     #- nfs/cluster
     #- nfs/postcheck

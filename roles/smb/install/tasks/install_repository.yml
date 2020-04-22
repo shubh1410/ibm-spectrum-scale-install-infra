@@ -25,7 +25,7 @@
 - name: install | Configure smb APT repository
   apt_repository:
     filename: spectrum-scale-smb-debs
-    repo: "deb [trusted=yes] {{ scale_install_smb_repository_debs }} ubuntu/ubuntu16/"
+    repo: "deb [trusted=yes] {{ scale_install_repository_url }}smb_debs/ubuntu/ubuntu16/ ./"
     validate_certs: no
     state: present
     update_cache: yes
@@ -40,7 +40,7 @@
 - name: install | Configure smb APT repository
   apt_repository:
     filename: spectrum-scale-smb-debs
-    repo: "deb [trusted=yes] {{ scale_install_smb_repository_debs }} ubuntu/ubuntu18/"
+    repo: "deb [trusted=yes] {{ scale_install_repository_url }}smb_debs/ubuntu/ubuntu18/ ./"
     validate_certs: no
     state: present
     update_cache: yes

@@ -82,4 +82,4 @@
    state: present
    disable_gpg_check: yes
    extra_args: i
-  when: ansible_pkg_mgr == 'zypper' or scale_install_repository_url is defined
+  when: ansible_pkg_mgr == 'zypper' and scale_install_repository_url is not defined

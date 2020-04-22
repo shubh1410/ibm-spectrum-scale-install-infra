@@ -14,7 +14,7 @@
 - name: install | Configure nfs APT repository
   apt_repository:
     filename: spectrum-scale-nfs-debs
-    repo: "deb [trusted=yes] {{ scale_install_nfs_repository_debs }} ./"
+    repo: "deb [trusted=yes] {{ scale_install_repository_url }}ganesha_debs/ubuntu16/ ./"
     validate_certs: no
     state: present
     update_cache: yes

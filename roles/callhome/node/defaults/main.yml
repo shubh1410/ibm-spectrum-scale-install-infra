@@ -1,6 +1,6 @@
 ---
-scale_install_callhome_repository_rpms: http://9.11.84.162/gpfs_rpms/
-scale_install_callhome_repository_debs: http://9.11.84.162/gpfs_debs/
+#scale_install_callhome_repository_rpms: http://9.11.84.162/gpfs_rpms/
+#scale_install_callhome_repository_debs: http://9.11.84.162/gpfs_debs/
 
 scale_callhome_packages:
   - gpfs.callhome-ecc-client
