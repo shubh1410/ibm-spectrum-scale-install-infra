@@ -3,13 +3,28 @@
   yum_repository:
     name: spectrum-scale-nfs-rpms
     description: IBM Spectrum Scale (NFS RPMS)
-    baseurl: "{{ scale_install_nfs_repository_rpms }}"
+    baseurl: "{{ scale_install_repository_url }}ganesha_rpms/rhel7/"
     gpgcheck: false
     state: present
   notify: yum-clean-metadata
   when:
     - ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
     - scale_install_repository_url != 'existing'
+    - ansible_distribution_major_version == '7'
+
+- name: install|configure nfs YUM repository
+  yum_repository:
+    name: spectrum-scale-nfs-rpms
+    description: IBM Spectrum Scale (NFS RPMS)
+    baseurl: "{{ scale_install_repository_url }}ganesha_rpms/rhel8/"
+    gpgcheck: false
+    state: present
+  notify: yum-clean-metadata
+  when:
+    - ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
+    - scale_install_repository_url != 'existing'
+    - ansible_distribution_major_version == '8'
+
 
 - name: install | Configure nfs APT repository
   apt_repository:
@@ -27,7 +42,7 @@
 - name: install | Configure nfs zypper repository
   zypper_repository:
     name: spectrum-scale-nfs-rpms
-    repo: "{{ scale_install_nfs_repository_rpms_sles }}"
+    repo: "{{ scale_install_repository_url }}sles12/"
     runrefresh: yes
     state: present
     disable_gpg_check: yes

@@ -3,18 +3,33 @@
   yum_repository:
     name: spectrum-scale-smb
     description: IBM Spectrum Scale (smb)
-    baseurl: "{{ scale_install_smb_repository_rpms }}"
+    baseurl: "{{ scale_install_repository_url }}smb_rpms/rhel7/"
     gpgcheck: false
     state: present
   notify: yum-clean-metadata
   when:
     - ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
     - scale_install_repository_url != 'existing'
+    - ansible_distribution_major_version == '7'
+
+- name: install | Configure smb YUM repository
+  yum_repository:
+    name: spectrum-scale-smb
+    description: IBM Spectrum Scale (smb)
+    baseurl: "{{ scale_install_repository_url }}smb_rpms/rhel8/"
+    gpgcheck: false
+    state: present
+  notify: yum-clean-metadata
+  when:
+    - ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
+    - scale_install_repository_url != 'existing'
+    - ansible_distribution_major_version == '8'
+
 
 - name: install | Configure smb zypper repository
   zypper_repository:
     name: spectrum-scale-smb-rpms
-    repo: "{{ scale_install_smb_repository_rpms_sles }}"
+    repo: "{{ scale_install_repository_url }}sles12/"
     runrefresh: yes
     state: present
     disable_gpg_check: yes
@@ -34,7 +49,6 @@
   when:
     - ansible_pkg_mgr == 'apt'
     - scale_install_repository_url != 'existing'
-    - ansible_distribution == 'Ubuntu'
     - ansible_distribution_major_version == '16'
 
 - name: install | Configure smb APT repository
@@ -49,7 +63,6 @@
   when:
     - ansible_pkg_mgr == 'apt'
     - scale_install_repository_url != 'existing'
-    - ansible_distribution == 'Ubuntu'
     - ansible_distribution_major_version == '18'
 
 
