@@ -279,19 +279,19 @@
   - "{{ scale_install_gpfs_nfs_ganesha.files }}" 
   - "{{ scale_install_gpfs_nfs_pm.files }}"
 
-- name: initialize
-  set_fact:
-   debuginfo_package: []
+- block:
+  - name: initialize
+    set_fact:
+     debuginfo_package: []
 
-- name: install | Add GPFS package to list
-  set_fact:
-   debuginfo_package: "{{ debuginfo_package + [ item.path ] }}"
-  with_items:
-  - "{{ scale_install_gpfs_nfs_ganesha_debuginfo.files }}"
-  when: ansible_distribution == 'RedHat'
-
-- name: remove debuginfo from packages
-  set_fact:
-   scale_install_all_packages: "{{ scale_install_all_packages | difference(debuginfo_package)}}"
+  - name: install | Add GPFS package to list
+    set_fact:
+     debuginfo_package: "{{ debuginfo_package + [ item.path ] }}"
+    with_items:
+    - "{{ scale_install_gpfs_nfs_ganesha_debuginfo.files }}"
+  
+  - name: remove debuginfo from packages
+    set_fact:
+     scale_install_all_packages: "{{ scale_install_all_packages | difference(debuginfo_package)}}"
   when: not install_debuginfo|bool and ansible_distribution == 'RedHat'
 
