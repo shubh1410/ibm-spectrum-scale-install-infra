@@ -5,12 +5,16 @@
    export_ips: ""
    server_nodes: ""
    service_list: []
-  
+   ces_nodes: ""
+
 - name: Collect status of ces shared root
   shell:
    cmd: "{{ directory }}mmlsconfig | grep 'cesSharedRoot '"
   register: ces_status
   ignore_errors: true
+
+- debug:
+        msg: "{{ ces_status }}"
 
 - name: Configuring cesSharedRoot
   shell:
@@ -36,6 +40,9 @@
   - "{{ protocol_nodes_list }}"
   delegate_to: "{{ protocol_nodes_list.0 }}"
   ignore_errors: true
+
+- debug:
+        msg: "{{ ces_enable_status }}"
 
 - name: Collect all nodes on which ces is not enabled
   set_fact:
@@ -105,11 +112,16 @@
    name: smb/install
   when: ces_disabled_nodes|length > 0 and 'SMB' in service_list
 
-- name: Enabling CES
-  shell:
-   cmd: "{{ directory }}mmchnode -N {{ item }} --ces-enable"
+- name: Prepare ces nodes string
+  set_fact:
+   ces_nodes: "{{ ces_nodes + ',' + item|string }}"
   with_items:
   - "{{ ces_disabled_nodes }}"
+  when: ces_disabled_nodes|length > 0
+
+- name: Enabling CES
+  shell:
+   cmd: "{{ directory }}mmchnode -N {{ ces_nodes[1:] }} --ces-enable"
   when: ces_disabled_nodes|length > 0
   delegate_to: "{{ protocol_nodes_list.0 }}"
   run_once: true
@@ -141,9 +153,11 @@
   shell:
    cmd: "{{ directory }}mmces address add --ces-ip {{ export_ips[1:] }}"
   when: ansible_fqdn in protocol_nodes_list
+  run_once: true
 
 - name: Rebalance CES IPs
   shell:
    cmd: "{{ directory }}mmces address move --rebalance"
   when: ansible_fqdn in protocol_nodes_list
   delegate_to: "{{ protocol_nodes_list.0 }}"
+  run_once: true
