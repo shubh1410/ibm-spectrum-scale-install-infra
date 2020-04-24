@@ -4,7 +4,7 @@
    ces_disabled_nodes: []
    export_ips: ""
    server_nodes: ""
-   #service_list: []
+   service_list: []
   
 - name: Collect status of ces shared root
   shell:

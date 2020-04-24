@@ -11,14 +11,6 @@
   when:
     - ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
 
-- name: install | Get license package
-  apt:
-    name: gpfs.license.*
-    state: present
-  register: package_name_version1
-  when:
-    - ansible_pkg_mgr == 'apt'
-
 - name: Find license package
   shell:
    cmd: apt-cache show gpfs.license.*
@@ -26,12 +18,10 @@
   when:
   - ansible_pkg_mgr == 'apt'
 
-- debug:
-        msg: "{{ package_name.stdout_lines.0[9:] }}"
 
-- name: Gather the rpm package facts
-  package_facts:
-    manager: apt
+    #- name: Gather the rpm package facts
+    #package_facts:
+    #manager: apt
 
 
     #- name: Print the rpm package facts
@@ -42,8 +32,6 @@
     #debug:
     #msg: "{{ ansible_facts.packages['gpfs.license.adv'] | length }} versions of foobar are installed!"
 
-- debug:
-        msg: "{{ ansible_facts.packages[package_name.stdout_lines.0[9:]] }}"
 
 - name: install | Get license package
   zypper:
