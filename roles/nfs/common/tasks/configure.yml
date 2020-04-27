@@ -17,9 +17,10 @@
         msg: "{{ ces_status }}"
 
 - name: Configuring cesSharedRoot
-  shell:
+  command:
    cmd: "{{ directory }}mmchconfig cesSharedRoot={{ protocols.mountpoint }}"
   when: ces_status.rc > 0
+
 
 - name: Prepare server nodes string
   set_fact:
@@ -28,9 +29,10 @@
   - "{{ protocol_nodes_list }}"
 
 - name: Setting server licenses on protocol nodes
-  shell:
+  command:
    cmd: "{{ directory }}mmchlicense server --accept -N {{ server_nodes[1:] }}"
   delegate_to: "{{ protocol_nodes_list.0 }}"
+
 
 - name: Collect status of ces nodes
   shell:
@@ -120,11 +122,12 @@
   when: ces_disabled_nodes|length > 0
 
 - name: Enabling CES
-  shell:
+  command:
    cmd: "{{ directory }}mmchnode -N {{ ces_nodes[1:] }} --ces-enable"
   when: ces_disabled_nodes|length > 0
   delegate_to: "{{ protocol_nodes_list.0 }}"
   run_once: true
+
 
 - name: Collect status of ces nodes
   shell:
@@ -149,14 +152,16 @@
   with_items:
   - "{{ protocols.export_ip_pool }}"
 
+
 - name: Assign export ips as pool
-  shell:
+  command:
    cmd: "{{ directory }}mmces address add --ces-ip {{ export_ips[1:] }}"
   when: ansible_fqdn in protocol_nodes_list
   run_once: true
 
+
 - name: Rebalance CES IPs
-  shell:
+  command:
    cmd: "{{ directory }}mmces address move --rebalance"
   when: ansible_fqdn in protocol_nodes_list
   delegate_to: "{{ protocol_nodes_list.0 }}"
