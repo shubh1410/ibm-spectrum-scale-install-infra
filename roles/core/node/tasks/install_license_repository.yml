@@ -18,35 +18,19 @@
   when:
   - ansible_pkg_mgr == 'apt'
 
-
-    #- name: Gather the rpm package facts
-    #package_facts:
-    #manager: apt
-
-
-    #- name: Print the rpm package facts
-    #debug:
-    #var: ansible_facts.packages
-
-    #- name: Check whether a package called foobar is installed
-    #debug:
-    #msg: "{{ ansible_facts.packages['gpfs.license.adv'] | length }} versions of foobar are installed!"
-
-
 - name: install | Get license package
   zypper:
     list: gpfs.license.*
-  register: package_name_version
+  register: package_name_version_zypp
   when:
     - ansible_pkg_mgr == 'zypper'
 
-
 - name: install | Check valid only one GPFS License (gpfs.license) RPM
   assert:
-    that: package_name_version.results | selectattr("yumstate", "match", "available") | list | length == 1
+    that: package_name_version.results | selectattr("yumstate", "match", "available") | list | length >= 1
     msg: >-
       More than one GPFS License (gpfs.license) RPM found:
-      "{{ gpfs_path_url }}/gpfs.license*{{ scale_architecture }}*"
+      "gpfs.license*{{ scale_architecture }}*"
   when:
     - ansible_pkg_mgr == 'yum' or ansible_pkg_mgr == 'dnf'
 

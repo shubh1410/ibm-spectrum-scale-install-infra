@@ -30,7 +30,7 @@
   when:
     - ansible_pkg_mgr == 'apt'
     - scale_install_repository_url != 'existing'
-
+#
 # Configure zypper repository
 #
 - name: install | Configure GPFS repository
