@@ -146,6 +146,44 @@
   - "{{ ces_enable_status.results }}"
   delegate_to: "{{ protocol_nodes_list.0 }}"
 
+- block:
+  - name: Verify cesiplist is added to ccr
+    shell: 
+     cmd: "{{ directory }}mmccr flist | grep cesiplist"
+    register: mmccr_out
+    ignore_errors: true
+    delegate_to: "{{ protocol_nodes_list.0 }}"
+    run_once: true
+
+  - debug:
+     var: mmccr_out.stdout
+
+  - name: Create cesiplist file
+    file:
+     path: "{{ cesiplist_path }}"
+     state: touch
+    delegate_to: "{{ protocol_nodes_list.0 }}"  
+    run_once: true
+    when: mmccr_out.rc == 1
+
+  - name: Add cesiplist file to ccr
+    command: "{{ directory }}ccr fput cesiplist {{ cesiplist_path }}"
+    delegate_to: "{{ protocol_nodes_list.0 }}"
+    run_once: true
+    when: mmccr_out.rc == 1
+
+  - name: Check cesiplist got added to ccr
+    shell: 
+     cmd: "{{ directory }}mmccr flist | grep cesiplist"
+    register: mmccr_out
+    ignore_errors: true
+    delegate_to: "{{ protocol_nodes_list.0 }}"
+    run_once: true
+
+  - debug:
+     var: mmccr_out.stdout
+  when: use_workaround|bool
+
 - name: Prepare export ips string
   set_fact:
     export_ips: "{{ export_ips + ',' + item|string }}"
@@ -157,12 +195,10 @@
   command:
    cmd: "{{ directory }}mmces address add --ces-ip {{ export_ips[1:] }}"
   when: ansible_fqdn in protocol_nodes_list
-  run_once: true
-
+  delegate_to: "{{ protocol_nodes_list.0 }}"
 
 - name: Rebalance CES IPs
   command:
    cmd: "{{ directory }}mmces address move --rebalance"
   when: ansible_fqdn in protocol_nodes_list
   delegate_to: "{{ protocol_nodes_list.0 }}"
-  run_once: true

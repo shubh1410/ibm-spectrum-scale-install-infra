@@ -1,1 +1,3 @@
 directory: /usr/lpp/mmfs/bin/
+cesiplist_path: /tmp/cesiplist
+use_workaround: true
