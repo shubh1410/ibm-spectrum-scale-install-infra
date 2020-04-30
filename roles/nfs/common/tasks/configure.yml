@@ -124,10 +124,11 @@
 - name: Enabling CES
   command:
    cmd: "{{ directory }}mmchnode -N {{ ces_nodes[1:] }} --ces-enable"
+  async: 45
+  poll: 5
   when: ces_disabled_nodes|length > 0
   delegate_to: "{{ protocol_nodes_list.0 }}"
   run_once: true
-
 
 - name: Collect status of ces nodes
   shell:
@@ -146,50 +147,11 @@
   - "{{ ces_enable_status.results }}"
   delegate_to: "{{ protocol_nodes_list.0 }}"
 
-- block:
-  - name: Verify cesiplist is added to ccr
-    shell: 
-     cmd: "{{ directory }}mmccr flist | grep cesiplist"
-    register: mmccr_out
-    ignore_errors: true
-    delegate_to: "{{ protocol_nodes_list.0 }}"
-    run_once: true
-
-  - debug:
-     var: mmccr_out.stdout
-
-  - name: Create cesiplist file
-    file:
-     path: "{{ cesiplist_path }}"
-     state: touch
-    delegate_to: "{{ protocol_nodes_list.0 }}"  
-    run_once: true
-    when: mmccr_out.rc == 1
-
-  - name: Add cesiplist file to ccr
-    command: "{{ directory }}ccr fput cesiplist {{ cesiplist_path }}"
-    delegate_to: "{{ protocol_nodes_list.0 }}"
-    run_once: true
-    when: mmccr_out.rc == 1
-
-  - name: Check cesiplist got added to ccr
-    shell: 
-     cmd: "{{ directory }}mmccr flist | grep cesiplist"
-    register: mmccr_out
-    ignore_errors: true
-    delegate_to: "{{ protocol_nodes_list.0 }}"
-    run_once: true
-
-  - debug:
-     var: mmccr_out.stdout
-  when: use_workaround|bool
-
 - name: Prepare export ips string
   set_fact:
     export_ips: "{{ export_ips + ',' + item|string }}"
   with_items:
   - "{{ protocols.export_ip_pool }}"
-
 
 - name: Assign export ips as pool
   command:
