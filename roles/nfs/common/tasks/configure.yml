@@ -13,14 +13,9 @@
   register: ces_status
   ignore_errors: true
 
-- debug:
-        msg: "{{ ces_status }}"
-
 - name: Configuring cesSharedRoot
-  command:
-   cmd: "{{ directory }}mmchconfig cesSharedRoot={{ protocols.mountpoint }}"
+  command: "{{ directory }}mmchconfig cesSharedRoot={{ protocols.mountpoint }}"
   when: ces_status.rc > 0
-
 
 - name: Prepare server nodes string
   set_fact:
@@ -29,10 +24,8 @@
   - "{{ protocol_nodes_list }}"
 
 - name: Setting server licenses on protocol nodes
-  command:
-   cmd: "{{ directory }}mmchlicense server --accept -N {{ server_nodes[1:] }}"
+  command: "{{ directory }}mmchlicense server --accept -N {{ server_nodes[1:] }}"
   delegate_to: "{{ protocol_nodes_list.0 }}"
-
 
 - name: Collect status of ces nodes
   shell:
@@ -42,9 +35,6 @@
   - "{{ protocol_nodes_list }}"
   delegate_to: "{{ protocol_nodes_list.0 }}"
   ignore_errors: true
-
-- debug:
-        msg: "{{ ces_enable_status }}"
 
 - name: Collect all nodes on which ces is not enabled
   set_fact:
@@ -122,8 +112,7 @@
   when: ces_disabled_nodes|length > 0
 
 - name: Enabling CES
-  command:
-   cmd: "{{ directory }}mmchnode -N {{ ces_nodes[1:] }} --ces-enable"
+  command: "{{ directory }}mmchnode -N {{ ces_nodes[1:] }} --ces-enable"
   async: 45
   poll: 5
   when: ces_disabled_nodes|length > 0
@@ -154,13 +143,11 @@
   - "{{ protocols.export_ip_pool }}"
 
 - name: Assign export ips as pool
-  command:
-   cmd: "{{ directory }}mmces address add --ces-ip {{ export_ips[1:] }}"
+  command: "{{ directory }}mmces address add --ces-ip {{ export_ips[1:] }}"
   when: ansible_fqdn in protocol_nodes_list
   delegate_to: "{{ protocol_nodes_list.0 }}"
 
 - name: Rebalance CES IPs
-  command:
-   cmd: "{{ directory }}mmces address move --rebalance"
+  command: "{{ directory }}mmces address move --rebalance"
   when: ansible_fqdn in protocol_nodes_list
   delegate_to: "{{ protocol_nodes_list.0 }}"
