@@ -1,0 +1,9 @@
+---
+#
+# Install or update packages
+#
+- name: install | Install GPFS GUI packages
+  package:
+    name: "{{ scale_install_all_packages }}"
+    state: present
+    disable_gpg_check: no
