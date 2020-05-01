@@ -70,6 +70,6 @@
   zypper:
    name: "{{ scale_install_all_packages }}"
    state: present
-   disable_gpg_check: yes
+   disable_gpg_check: no
   when: ansible_pkg_mgr == 'zypper' and scale_install_repository_url is not defined
 

@@ -4,7 +4,7 @@
 
 ## Specify the URL of the (existing) Spectrum Scale ZIMon YUM repository
 ## (copy the contents of /usr/lpp/mmfs/.../zimon_packages/rhel7 to build your repository)
-scale_install_zimon_repository_url: http://9.11.84.162/zimon_rpms/
+scale_install_zimon_repository_url: http://9.11.84.162/
 
 ## Note that if this is a URL then a new repository definition will be created.
 ## If this variable is set to 'existing' then it is assumed that a repository
@@ -29,11 +29,11 @@ scale_zimon_sensors_packages_ubuntu:
  - gpfs.gss.pmsensors
 
 scale_zimon_collector_packages_suse:
-  - gpfs.java*{{ scale_architecture }}
-  - gpfs.gss.pmcollector*sles{{ ansible_distribution_major_version }}*
+  - gpfs.java
+  - gpfs.gss.pmcollector
 
 scale_zimon_sensors_packages_suse:
- - gpfs.gss.pmsensors*sles{{ ansible_distribution_major_version }}*
+ - gpfs.gss.pmsensors
 
 ## Node's default GUI collector role -
 ## you'll likely want to define per-node roles in your inventory

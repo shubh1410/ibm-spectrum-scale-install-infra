@@ -4,6 +4,40 @@
 #
 # Configure YUM repository
 #
+- name: Initialize
+  set_fact:
+   zimon_url: ""
+
+- name: install | zimon path
+  set_fact:
+    zimon_url: 'zimon_rpms/rhel7/'
+  when: ansible_distribution == 'RedHat' and ansible_distribution_major_version == '7'
+
+- name: install | zimon path
+  set_fact:
+    zimon_url: 'zimon_rpms/rhel8/'
+  when: ansible_distribution in scale_rhel_distribution and ansible_distribution_major_version == '8'
+
+- name: install | zimon path
+  set_fact:
+    zimon_url: 'zimon_debs/ubuntu/ubuntu16/'
+  when: ansible_distribution in scale_ubuntu_distribution and ansible_distribution_major_version == '16'
+
+- name: install | zimon path
+  set_fact:
+    zimon_url: 'zimon_debs/ubuntu/ubuntu18/'
+  when: ansible_distribution in scale_ubuntu_distribution and ansible_distribution_major_version == '18'
+
+- name: install | zimon path
+  set_fact:
+    zimon_url: 'zimon_rpms/sles12/'
+  when: ansible_distribution == 'SLES' and ansible_distribution_major_version == '12'
+
+- name: install | zimon path
+  set_fact:
+    zimon_url: 'zimon_rpms/sles15/'
+  when: ansible_distribution in scale_sles_distribution and ansible_distribution_major_version == '15'
+
 - name: install | Configure ZIMon YUM repository
   yum_repository:
     name: spectrum-scale-zimon
@@ -19,7 +53,7 @@
 - name: install | Configure zimon APT repository
   apt_repository:
     filename: spectrum-scale-zimon-debs
-    repo: "deb [trusted=yes] {{ scale_install_zimon_repository_url }}zimon_debs/ubuntu/ubuntu16/ ./"
+    repo: "deb [trusted=yes] {{ scale_install_zimon_repository_url }}{{ zimon_url }} ./"
     validate_certs: no
     state: present
     update_cache: yes
@@ -28,30 +62,16 @@
   when:
     - ansible_pkg_mgr == 'apt'
     - scale_install_repository_url != 'existing'
-    - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_major_version == '16'
 
-- name: install | Configure zimon APT repository
-  apt_repository:
-    filename: spectrum-scale-zimon-debs
-    repo: "deb [trusted=yes] {{ scale_install_zimon_repository_url }}zimon_debs/ubuntu/ubuntu18/ ./"
-    validate_certs: no
-    state: present
-    update_cache: yes
-    codename: IBM Spectrum Scale (Zimon debs)
-    mode: 0777
-  when:
-    - ansible_pkg_mgr == 'apt'
-    - scale_install_repository_url != 'existing'
-    - ansible_distribution == 'Ubuntu'
-    - ansible_distribution_major_version == '18'
+- debug:
+        msg: "{{ scale_install_repository_url }}{{ zimon_url }}"
 
 - name: install | Configure ZIMon repository
   zypper_repository:
     name: spectrum-scale-zimon
     description: IBM Spectrum Scale (ZIMon)
-    baseurl: "{{ scale_install_zimon_repository_url }}"
-    gpgcheck: false
+    repo: "{{ scale_install_repository_url }}{{ zimon_url }}"
+    disable_gpg_check: no
     state: present
   when:
     - ansible_pkg_mgr == 'zypper'
