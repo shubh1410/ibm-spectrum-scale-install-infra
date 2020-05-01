@@ -37,8 +37,8 @@
   zypper_repository:
     name: spectrum-scale-gpfs
     description: IBM Spectrum Scale (GPFS)
-    baseurl: "{{ scale_install_repository_url }}"
-    gpgcheck: false
+    repo: "{{ scale_install_repository_url }}/gpfs_rpms/"
+    disable_gpg_check: no
     state: present
   when:
     - ansible_pkg_mgr == 'zypper'
