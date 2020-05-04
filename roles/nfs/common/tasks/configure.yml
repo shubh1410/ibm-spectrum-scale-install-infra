@@ -57,18 +57,17 @@
   ignore_errors: true
   run_once: true
 
-- name:
+- name: Add SMB service to list
   set_fact:
    service_list: "{{ service_list + [service_status.stderr|regex_search('SMB')] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc > 0
   run_once: true
 
-- name:
+- name: Add SMB service to list
   set_fact:
    service_list: "{{ service_list + ['SMB'] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc == 0
   run_once: true
-
 
 - name: Check if NFS is running
   shell:
@@ -78,23 +77,17 @@
   ignore_errors: true
   run_once: true
 
-- name:
+- name: Add NFS service to the list
   set_fact:
    service_list: "{{ service_list + [service_status.stderr|regex_search('NFS')] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc > 0
   run_once: true
 
-- name:
+- name: Add NFS service to the list 
   set_fact:
    service_list: "{{ service_list + ['NFS'] }}"
   when: ansible_fqdn in protocol_nodes_list and service_status.rc == 0
   run_once: true
-
-- debug:
-   msg: "{{ service_list }}"
-
-- debug:
-        msg: "{{ ces_disabled_nodes }}"
 
 - import_role: 
    name: nfs/node

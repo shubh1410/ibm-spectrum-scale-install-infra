@@ -8,9 +8,9 @@
     disable_gpgcheck: "yes"
   when: scale_version < '5.0.4.0'
 
-- name: install | Install GPFS Callhome packages
+- name: Install GPFS nfs packages
   yum:
    name: "{{ scale_install_all_packages }}"
    state: present
-   disable_gpg_check: "{{ disable_gpgcheck }}"
-  
+   disable_gpg_check: "{{ disable_gpgcheck }}" 
+  when: ansible_fqdn in nfs_nodes_list

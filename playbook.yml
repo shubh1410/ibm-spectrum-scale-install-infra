@@ -6,21 +6,21 @@
   - scale_version: 5.0.5.0
           #- scale_install_localpkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
     #- scale_install_remotepkg_path: /root/Spectrum_Scale_Advanced-5.0.5.0-x86_64-Linux-install
-  - scale_install_repository_url: http://9.11.84.162/gpfs_rpms/
+  - scale_install_repository_url: http://9.11.84.162/
   roles:
-   - core/common
-   - core/precheck
-   - core/node
-   - core/cluster
-   - core/postcheck
-   - gui/precheck
-   - gui/node
-   - gui/cluster
-   - gui/postcheck
-   - zimon/precheck
-   - zimon/node
-   - zimon/cluster
-   - zimon/postcheck
+  - core/common
+    #- core/precheck
+    #- core/node
+    # - core/cluster
+    #- core/postcheck
+    #- gui/precheck
+    #- gui/node
+    #- gui/cluster
+    #- gui/postcheck
+    #- zimon/precheck
+    #- zimon/node
+    #- zimon/cluster
+    #- zimon/postcheck
     #- callhome/precheck
     #- callhome/node
     #- callhome/cluster
@@ -30,9 +30,9 @@
     #- nfs/node
     #- nfs/cluster
     #- nfs/postcheck
-    #- smb/precheck
-    #- smb/install
-    #- smb/configure
-    #- smb/postcheck
+  - smb/precheck
+  - smb/install
+  - smb/configure
+  - smb/postcheck
   #- object/install
 
