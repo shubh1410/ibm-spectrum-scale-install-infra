@@ -4,12 +4,22 @@
 #
 # Configure YUM repository
 #
+- name: Initialize
+  set_fact:
+   gpgcheck: "yes"
+
+- name: Disable gpg check
+  set_fact:
+   gpgcheck: "no"
+  when: scale_version < '5.0.4.0'
+
 - name: install | Configure GPFS YUM repository
   yum_repository:
     name: spectrum-scale-gpfs
     description: IBM Spectrum Scale (GPFS)
     baseurl: "{{ scale_install_repository_url }}"
-    gpgcheck: false
+    gpgcheck: "{{ gpgcheck }}"
+    repo_gpgcheck: no
     state: present
   notify: yum-clean-metadata
   when:

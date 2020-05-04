@@ -4,13 +4,22 @@
 #
 # Install or update packages
 #
+- name: Initialize
+  set_fact:
+    disable_gpgcheck: "no"
+
+- name: Disable gpg check
+  set_fact:
+    disable_gpgcheck: "yes"
+  when: scale_version < '5.0.4.0'
+
 - block:  ## when: not scale_daemon_running
     - block:
         - name: install | List installed GPFS packages
           yum:
             list: gpfs.base
             disablerepo: spectrum-scale-gpfs
-            disable_gpg_check: no
+            disable_gpg_check: "{{ disable_gpgcheck }}"
           register: scale_install_packagelist
           when: ansible_pkg_mgr == 'yum'
 
@@ -18,7 +27,7 @@
           yum:
             name: "{{ scale_install_all_packages }}"
             state: present
-            disable_gpg_check: no
+            disable_gpg_check: "{{ disable_gpgcheck }}"
           register: scale_install_packageresult
           when: ansible_pkg_mgr == 'yum'
 
@@ -26,7 +35,7 @@
           yum:
             name: "{{ scale_install_license_packages }}"
             state: present
-            disable_gpg_check: no
+            disable_gpg_check: "{{ disable_gpgcheck }}"
           register: scale_install_license_packageresult
           when: ansible_pkg_mgr == 'yum'
 
@@ -34,7 +43,7 @@
           dnf:
             list: gpfs.base
             disablerepo: spectrum-scale-gpfs
-            disable_gpg_check: no
+            disable_gpg_check: "{{ disable_gpgcheck }}"
           register: scale_install_dnfpackagelist
           when: ansible_pkg_mgr == 'dnf'
 
@@ -42,7 +51,7 @@
           dnf:
             name: "{{ scale_install_all_packages }}"
             state: present
-            disable_gpg_check: no
+            disable_gpg_check: "{{ disable_gpgcheck }}"
           register: scale_install_dnfpackageresult
           when: ansible_pkg_mgr == 'dnf'
 
@@ -50,7 +59,7 @@
           dnf:
             name: "{{ scale_install_license_packages }}"
             state: present
-            disable_gpg_check: no
+            disable_gpg_check: "{{ disable_gpgcheck }}"
           register: scale_install_license_dnfpackageresult
           when: ansible_pkg_mgr == 'dnf'
 

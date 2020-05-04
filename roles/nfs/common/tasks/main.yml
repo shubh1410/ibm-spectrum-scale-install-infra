@@ -1,6 +1,15 @@
 ---
 # tasks file for common
 - include_tasks: check.yml
-  #when: "{{ protocols is defined and protocols.nfs|bool }}"
+  when: protocols is defined and protocols.nfs|bool 
 - include_tasks: configure.yml
-  #when: protocols is defined and protocols.nfs|bool
+  when: protocols is defined and protocols.nfs|bool
+  #- include_tasks: configure_cesSharedRoot.yml
+  # when: protocols is defined and protocols.nfs|bool
+
+  #- include_tasks: configure_enableCES.yml
+  # when: protocols is defined and protocols.nfs|bool
+
+  #- include_tasks: configure_assignIP.yml
+  # when: protocols is defined and protocols.nfs|bool
+

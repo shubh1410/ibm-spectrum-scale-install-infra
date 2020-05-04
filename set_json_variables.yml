@@ -6,7 +6,7 @@
   tasks:
   - name: Read all intermediate output from Resource Details
     include_vars:
-     dir: vars2
+     dir: vars1
      extensions:
      - json
 
@@ -30,5 +30,6 @@
      scale_cluster_quorum: "{{ item.is_quorum_node  }}"
      scale_cluster_manager: "{{ item.is_manager_node }}"
      scale_zimon_collector: "{{ item.scale_zimon_collector }}"
+     scale_cluster_gui: "{{ item.scale_cluster_gui }}"
     loop: "{{ node_details }}"
 

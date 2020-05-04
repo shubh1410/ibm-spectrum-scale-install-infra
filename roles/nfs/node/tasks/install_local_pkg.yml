@@ -244,6 +244,7 @@
     assert:
      that: scale_install_gpfs_nfs_pm.matched > 0
      msg: "No GPFS utils (gpfs.pm-ganesha) package found {{ nfs_extracted_path }}/{{ zimon_url }}gpfs.pm-ganesha*"
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'Ubuntu'
 
 - block:  ## when: host is defined as a protocol node
 
@@ -257,7 +258,7 @@
     assert:
      that: scale_install_gpfs_nfs_ganesha_debuginfo.matched > 0
      msg: "No GPFS nfs ganesha(gpfs.nfs-ganesha-debuginfo) package found {{ nfs_extracted_path }}/{{ nfs_url }}gpfs.nfs-ganesha-debuginfo*"
-  when: ansible_distribution == 'RedHat'
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'SLES'
 
 - name: install | Add GPFS package to list
   vars:
@@ -277,7 +278,16 @@
    scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
   with_items:
   - "{{ scale_install_gpfs_nfs_ganesha.files }}" 
+    # - "{{ scale_install_gpfs_nfs_pm.files }}"
+
+- name: install | Add GPFS package to list
+  vars:
+   current_package: "{{ item.path }}"
+  set_fact:
+   scale_install_all_packages: "{{ scale_install_all_packages + [ current_package ] }}"
+  with_items:
   - "{{ scale_install_gpfs_nfs_pm.files }}"
+  when: ansible_distribution == 'RedHat' or ansible_distribution == 'Ubuntu'
 
 - block:
   - name: initialize
@@ -295,3 +305,5 @@
      scale_install_all_packages: "{{ scale_install_all_packages | difference(debuginfo_package)}}"
   when: not install_debuginfo|bool and ansible_distribution == 'RedHat'
 
+- debug:
+        msg: "{{ scale_install_all_packages }}"

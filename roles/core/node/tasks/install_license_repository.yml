@@ -25,8 +25,6 @@
   when:
     - ansible_pkg_mgr == 'zypper'
 
-- debug: 
-   msg: "{{ package_name_version_zypp.stdout_lines.7[17:] }}"
 
 - name: install | Check valid only one GPFS License (gpfs.license) RPM
   assert:
