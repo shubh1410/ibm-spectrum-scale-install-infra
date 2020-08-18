@@ -19,5 +19,4 @@ galaxy_info:
     - scale
     - gpfs
 
-dependencies: 
-    - nfs/common
+dependencies: []
