@@ -37,3 +37,4 @@ extracted_default_path: "/usr/lpp/mmfs"
 gpfs_extracted_path: "{{ extracted_default_path }}/{{ scale_version }}"
 gpgKey_src: "/usr/lpp/mmfs/{{ scale_version }}/Public_Keys/SpectrumScale_public_key.pgp"
 gpgKey_dest: "/root/"
+enable_gpg_check: true
