@@ -1,0 +1,4 @@
+playbook.yml
+set_json_variables.yml
+vars/resource_details.json
+
